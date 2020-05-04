@@ -20,7 +20,12 @@ class BBSApplicationTests {
 
     @Test
     void println(){
-        System.out.println(userDao.findAllByUsername("Edgar"));
+        System.out.println(userDao.findUserByUsername("Edgar1"));
+        if(userDao.findUserById(2L).isPresent()){
+            System.out.println("存在");
+        }else{
+            System.out.println("不存在");
+        };
     }
 
 

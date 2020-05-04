@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserLoginService {
@@ -17,9 +18,9 @@ public class UserLoginService {
     private UserDao userDao;
 
     public Result login(String username, String password, HttpServletRequest request) {
-        List<User> userList = userDao.findAllByUsername(username);
-        if (userList.size() > 0) {
-            String realPassword = userDao.findAllByUsername(username).get(0).getPassword();
+        Optional<User> user = userDao.findUserByUsername(username);
+        if (user.isPresent()) {
+            String realPassword = user.get().getPassword();
             if (realPassword.equals(password)) {
                 // 登录成功
                 HttpSession session = request.getSession();

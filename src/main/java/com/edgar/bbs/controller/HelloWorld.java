@@ -10,6 +10,7 @@ import com.edgar.bbs.utils.IpUtil;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/")
@@ -26,10 +27,10 @@ public class HelloWorld {
     }
 
     @RequestMapping(value = "/api/getUser", method = RequestMethod.POST)
-    public List<User> getUser(@RequestParam(value = "username", required = false) String username){
+    public Optional<User> getUser(@RequestParam(value = "username", required = false) String username){
         System.out.println(username);
-        System.out.println(userDao.findAllByUsername(username));
-        return userDao.findAllByUsername(username);
+        System.out.println(userDao.findUserByUsername(username));
+        return userDao.findUserByUsername(username);
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.POST)
