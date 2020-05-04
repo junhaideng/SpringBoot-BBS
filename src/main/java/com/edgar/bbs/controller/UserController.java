@@ -7,7 +7,7 @@ import com.edgar.bbs.dao.UserDao;
 import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.domain.LoginLog;
-import com.edgar.bbs.service.UserLoginService;
+import com.edgar.bbs.service.UserService;
 import com.edgar.bbs.utils.Result;
 import com.edgar.bbs.utils.UserInfo;
 import io.swagger.annotations.Api;
@@ -29,7 +29,7 @@ public class UserController {
     private LoginLogDao loginLogDao;
 
     @Resource
-    private UserLoginService userLoginService;
+    private UserService userService;
 
     @Resource
     private UserDao userDao;
@@ -43,7 +43,7 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "用户登录", notes = "用户登录")
     public Result login(@RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, HttpServletRequest request){
-        return  userLoginService.login(username, password, request);
+        return  userService.login(username, password, request);
     }
 
 
@@ -73,4 +73,11 @@ public class UserController {
     public List<Files> getUserFiles(@RequestParam(value = "userId") Long userId){
         return filesDao.findAllByUserId(userId);
     }
+
+    @ApiOperation(value = "修改用户的密码")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Result updateUserPasswordByUsername(@RequestParam(value = "username") String username,@RequestParam(value = "oldPassword") String oldPassword, @RequestParam(value = "newPassword") String newPassword){
+        return userService.updatePassword(username, oldPassword, newPassword);
+    }
+
 }
