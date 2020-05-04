@@ -1,9 +1,11 @@
 package com.edgar.bbs.controller;
 
 import com.edgar.bbs.dao.ArticleDao;
+import com.edgar.bbs.dao.FilesDao;
 import com.edgar.bbs.dao.LoginLogDao;
 import com.edgar.bbs.dao.UserDao;
 import com.edgar.bbs.domain.Article;
+import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.domain.LoginLog;
 import com.edgar.bbs.service.UserLoginService;
 import com.edgar.bbs.utils.Result;
@@ -35,6 +37,9 @@ public class UserController {
     @Resource
     private ArticleDao articleDao;
 
+    @Resource
+    private FilesDao filesDao;
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "用户登录", notes = "用户登录")
     public Result login(@RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, HttpServletRequest request){
@@ -63,4 +68,9 @@ public class UserController {
         return articleDao.findArticlesByUserId(userId);
     }
 
+    @ApiOperation(value = "获取用户的文件信息")
+    @RequestMapping(value = "/files", method = RequestMethod.POST)
+    public List<Files> getUserFiles(@RequestParam(value = "userId") Long userId){
+        return filesDao.findAllByUserId(userId);
+    }
 }
