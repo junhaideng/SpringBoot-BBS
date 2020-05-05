@@ -31,7 +31,7 @@ public class Files {
     Long downloadTimes;
 
     @Column(name = "uploadTime", columnDefinition = "datetime default now()")
-    String uploadTimes;
+    String uploadTime;
 
     @Column(name = "description", columnDefinition = "text")
     String description;
