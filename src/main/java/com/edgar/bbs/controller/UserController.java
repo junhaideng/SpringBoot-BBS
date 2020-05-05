@@ -56,7 +56,7 @@ public class UserController {
     @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.POST)
     public UserInfo getUserInfo(@RequestParam(value = "username") String username) {
-        UserInfo user = userDao.getInfoByUsername(username);
+        UserInfo user = userDao.getInfoUsingUsername(username);
         System.out.println(user);
         return user;
     }

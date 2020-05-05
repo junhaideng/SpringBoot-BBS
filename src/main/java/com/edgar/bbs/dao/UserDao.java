@@ -31,7 +31,7 @@ public interface UserDao extends JpaRepository<User, Long> {
     List<User> findUsersByAcademy(@Param("academy") String academy);
 
     @Query(value = "SELECT id, username, academy, avatar, email, gender, create_time, grade, age FROM user WHERE username=:username", nativeQuery = true)
-    UserInfo getInfoByUsername(@Param(value = "username") String username);
+    UserInfo getInfoUsingUsername(@Param(value = "username") String username);
 
     @Modifying
     @Query(value = "INSERT INTO user(username, password, email, gender, academy, grade) VALUES(:username, :password, :email, :gender, :academy, :grade)", nativeQuery = true)
