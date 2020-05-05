@@ -86,9 +86,9 @@ public class UserController {
     }
 
     @ApiOperation(value = "用户注册")
-    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public Result signUp(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password){
-        return userService.signUp(username, password);
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public Result signUp(HttpServletRequest request){
+        return userService.signUp(request);
     }
 
 }

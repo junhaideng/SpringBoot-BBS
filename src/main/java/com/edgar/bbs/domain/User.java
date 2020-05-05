@@ -37,8 +37,8 @@ public class User {
     @Column(name = "academy", columnDefinition = "varchar(30)")
     String academy;
 
-    @Column(name = "sex", columnDefinition = "varchar(30)")
-    String sex; // 男   女   保密
+    @Column(name = "gender", columnDefinition = "varchar(30)")
+    String gender; // 男   女   保密
 
     @Column(name = "age", columnDefinition = "smallint")
     Integer age;

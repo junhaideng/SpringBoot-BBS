@@ -40,14 +40,20 @@ public class UserService {
     /*
     用户注册
      */
-    public Result signUp(String username, String password){
+    public Result signUp(HttpServletRequest request){
+        System.out.println(request.getParameterMap());
         try {
-            Optional<User> user = userDao.findUserByUsername(username);
+            Optional<User> user = userDao.findUserByUsername(request.getParameter("username"));
             if(user.isPresent()){
                 return new Result(400, "该用户名已存在");
             }else{
-                userDao.insertUser(username, password);
-                return new Result(200, "用户创建成功");
+                try{
+                    userDao.insertUser(request.getParameter("username"), request.getParameter("password"), request.getParameter("email"), request.getParameter("gender"), request.getParameter("academy"), request.getParameter("grade"));
+                    return new Result(200, "用户创建成功, 请登录");
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return new Result(400, "创建用户失败");
+                }
             }
 
         } catch (Exception e){

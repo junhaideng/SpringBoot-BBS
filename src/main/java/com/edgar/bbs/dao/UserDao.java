@@ -23,19 +23,19 @@ public interface UserDao extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM user WHERE username=:username", nativeQuery = true)
     Optional<User> findUserByUsername(@Param("username") String username);
-    
+
     @Query(value = "SELECT * FROM user WHERE id=:id", nativeQuery = true)
     Optional<User> findUserById(@Param("id") Long id);
 
     @Query(value = "SELECT * FROM user WHERE academy=:academy", nativeQuery = true)
     List<User> findUsersByAcademy(@Param("academy") String academy);
 
-    @Query(value = "SELECT id, username, academy, avatar, email, sex, create_time, grade, age FROM user WHERE username=:username", nativeQuery = true)
+    @Query(value = "SELECT id, username, academy, avatar, email, gender, create_time, grade, age FROM user WHERE username=:username", nativeQuery = true)
     UserInfo getInfoByUsername(@Param(value = "username") String username);
 
     @Modifying
-    @Query(value = "INSERT INTO user(username, password) VALUES(:username, :password)", nativeQuery = true)
-    void insertUser(@Param(value = "username") String username, @Param(value = "password")  String password);
+    @Query(value = "INSERT INTO user(username, password, email, gender, academy, grade) VALUES(:username, :password, :email, :gender, :academy, :grade)", nativeQuery = true)
+    void insertUser(@Param(value = "username") String username, @Param(value = "password") String password, @Param(value = "email") String email, @Param(value = "gender") String gender, @Param(value = "academy") String academy, @Param(value = "grade") String grade);
 
     @Modifying
     @Query(value = "UPDATE user SET password=:password WHERE username=:username", nativeQuery = true)
