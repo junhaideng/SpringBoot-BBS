@@ -18,7 +18,7 @@ public class User {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "bigint auto_increment", nullable = false, unique = true)
+    @Column(name = "id", columnDefinition = "bigint", nullable = false, unique = true)
     Long id;
 
     @Column(name = "username", columnDefinition = "varchar(20) not null", unique = true)

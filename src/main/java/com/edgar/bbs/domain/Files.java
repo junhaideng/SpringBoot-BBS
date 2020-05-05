@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class Files {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "bigint auto_increment", nullable = false, unique = true)
+    @Column(name = "id", columnDefinition = "bigint", nullable = false, unique = true)
     Long id;
 
     @Column(name = "userId", columnDefinition = "bigint", nullable = false)
