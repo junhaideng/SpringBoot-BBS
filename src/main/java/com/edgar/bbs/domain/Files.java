@@ -27,7 +27,7 @@ public class Files {
     @Column(name = "type", columnDefinition = "varchar(10)", nullable = false)
     String type;
 
-    @Column(name = "downloadTimes", columnDefinition = "bigint")
+    @Column(name = "downloadTimes", columnDefinition = "bigint default 0")
     Long downloadTimes;
 
     @Column(name = "uploadTime", columnDefinition = "datetime default now()")
