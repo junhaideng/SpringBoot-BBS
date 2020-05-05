@@ -18,7 +18,7 @@ public class Article {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "bigint auto_increment")
+    @Column(name = "id", columnDefinition = "bigint")
     Long id;
 
     @Column(name = "userId", columnDefinition = "bigint")
@@ -37,15 +37,12 @@ public class Article {
     @Column(name = "type", columnDefinition = "varchar(40)")
     String type;
 
-//    @Column(name = "read", columnDefinition = "bigint")
-//    Long read;
-//
-//    @Column(name = "star", columnDefinition = "bigint")
-//    Integer star;
-//
-//    @Column(name = "like", columnDefinition = "bigint")
-//    Integer like;
-//
-//    @Column(name = "comments", columnDefinition = "bigint")
-//    Integer comments;
+    @Column(name = "`read`", columnDefinition = "bigint default 0")
+    Long read;
+
+    @Column(name = "star", columnDefinition = "bigint default 0")
+    Integer star;
+
+    @Column(name = "comments", columnDefinition = "bigint default 0")
+    Integer comments;
 }
