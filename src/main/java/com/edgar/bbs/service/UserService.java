@@ -1,6 +1,7 @@
 package com.edgar.bbs.service;
 
 import com.edgar.bbs.dao.ArticleDao;
+import com.edgar.bbs.dao.FilesDao;
 import com.edgar.bbs.dao.UserDao;
 import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.User;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +24,9 @@ public class UserService {
 
     @Resource
     private ArticleDao articleDao;
+
+    @Resource
+    private FilesDao filesDao;
 
     public Result login(String username, String password, HttpServletRequest request) {
         Optional<User> user = userDao.findUserByUsername(username);
@@ -114,4 +119,24 @@ public class UserService {
             return new Result(400, "发帖失败");
         }
     }
+
+    /*
+    删除文件
+     */
+    public Result deleteFilesById(Long[] filesId){
+        try{
+            for(Long id: filesId){
+                if(filesDao.findById(id).isPresent()){
+                    filesDao.deleteById(id);
+                }else{
+                    return new Result(400, "文件不存在");
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(400, "删除失败");
+        }
+        return new Result(200, "删除成功");
+    }
+
 }

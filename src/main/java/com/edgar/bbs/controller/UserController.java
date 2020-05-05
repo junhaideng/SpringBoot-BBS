@@ -12,13 +12,11 @@ import com.edgar.bbs.utils.Result;
 import com.edgar.bbs.utils.UserInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -71,6 +69,12 @@ public class UserController {
     @RequestMapping(value = "/files", method = RequestMethod.POST)
     public List<Files> getUserFiles(@RequestParam(value = "userId") Long userId) {
         return filesDao.findAllByUserId(userId);
+    }
+
+    @ApiOperation(value = "删除文件")
+    @RequestMapping(value = "/delfiles", method = RequestMethod.POST)
+    public Result delFiles(@RequestBody Long[] filesId){
+        return userService.deleteFilesById(filesId);
     }
 
     @ApiOperation(value = "修改用户的密码")
