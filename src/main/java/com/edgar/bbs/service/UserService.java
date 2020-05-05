@@ -1,6 +1,8 @@
 package com.edgar.bbs.service;
 
+import com.edgar.bbs.dao.ArticleDao;
 import com.edgar.bbs.dao.UserDao;
+import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.User;
 import com.edgar.bbs.utils.Result;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class UserService {
      */
     @Resource
     private UserDao userDao;
+
+    @Resource
+    private ArticleDao articleDao;
 
     public Result login(String username, String password, HttpServletRequest request) {
         Optional<User> user = userDao.findUserByUsername(username);
@@ -95,6 +100,18 @@ public class UserService {
             }
         }else{
             return new Result(400, "无此用户");
+        }
+    }
+
+    /*
+    发帖
+     */
+    public Result postArticle(Long user_id, String title, String type, String content){
+        try{
+            articleDao.insertArticleByUserId(user_id, title, type, content);
+            return new Result(200, "发帖成功");
+        } catch (Exception e){
+            return new Result(400, "发帖失败");
         }
     }
 }

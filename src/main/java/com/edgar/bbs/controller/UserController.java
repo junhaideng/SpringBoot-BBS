@@ -91,4 +91,9 @@ public class UserController {
         return userService.signUp(request);
     }
 
+    @ApiOperation(value = "发帖")
+    @RequestMapping(value = "/post", method = RequestMethod.POST)
+    public Result post(@RequestParam(value = "title") String title, @RequestParam(value="type") String type, @RequestParam(value = "content") String content, @RequestParam("user_id") Long user_id){
+        return userService.postArticle(user_id, title, type, content);
+    }
 }

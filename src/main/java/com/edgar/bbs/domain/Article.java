@@ -24,7 +24,7 @@ public class Article {
     @Column(name = "userId", columnDefinition = "bigint")
     Long userId;
 
-    @Column(name = "title", columnDefinition = "varchar(20)")
+    @Column(name = "title", columnDefinition = "varchar(200)")
     String title;
 
     @Column(name = "content", columnDefinition = "text")
@@ -33,6 +33,9 @@ public class Article {
 
     @Column(name = "create_time", columnDefinition = "datetime default now()")
     String createTime;
+
+    @Column(name = "type", columnDefinition = "varchar(40)")
+    String type;
 
 //    @Column(name = "read", columnDefinition = "bigint")
 //    Long read;
