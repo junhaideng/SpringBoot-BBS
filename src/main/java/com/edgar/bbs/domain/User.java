@@ -48,4 +48,6 @@ public class User {
     @Column(name = "create_time", columnDefinition = "datetime default now()")
     String create_time;
 
+    @Column(name = "description", columnDefinition = "text")
+    String description;
 }

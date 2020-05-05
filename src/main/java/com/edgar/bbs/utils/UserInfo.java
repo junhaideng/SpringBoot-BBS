@@ -14,12 +14,14 @@ public interface UserInfo {
 
     String getEmail();
 
-    String getSex();
+    String getGender();
 
     String getCreate_time();
 
     String getGrade();
 
     Integer getAge();
+
+    String getDescription();
 
 }

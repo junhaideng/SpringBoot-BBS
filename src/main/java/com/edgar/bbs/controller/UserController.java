@@ -6,8 +6,8 @@ import com.edgar.bbs.dao.LoginLogDao;
 import com.edgar.bbs.dao.UserDao;
 import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.Files;
-import com.edgar.bbs.domain.LoginLog;
 import com.edgar.bbs.service.UserService;
+import com.edgar.bbs.utils.LoginLogInfo;
 import com.edgar.bbs.utils.Result;
 import com.edgar.bbs.utils.UserInfo;
 import io.swagger.annotations.Api;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@Api(value = "登录日志")
+@Api(value = "用户相关")
 @RequestMapping("/api/user")
 public class UserController {
     @Resource
@@ -49,7 +49,7 @@ public class UserController {
 
     @ApiOperation(value = "获取用户登录日志")
     @RequestMapping(value = "/loginlog", method = RequestMethod.POST)
-    public List<LoginLog> getUserLoginLog(@RequestParam(value = "user_id") Long user_id) {
+    public List<LoginLogInfo> getUserLoginLog(@RequestParam(value = "user_id") Long user_id) {
         return loginLogDao.findAllByUserId(user_id);
     }
 
