@@ -3,6 +3,7 @@ package com.edgar.bbs.service;
 import com.edgar.bbs.dao.ArticleDao;
 import com.edgar.bbs.dao.FilesDao;
 import com.edgar.bbs.dao.UserDao;
+import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.domain.User;
 import com.edgar.bbs.utils.FileUtil;
 import com.edgar.bbs.utils.Result;
@@ -133,7 +134,10 @@ public class UserService {
     public Result deleteFilesById(Long[] filesId) {
         try {
             for (Long id : filesId) {
-                if (filesDao.findById(id).isPresent()) {
+                Optional<Files> file = filesDao.findById(id);
+                if (file.isPresent()) {
+                    String BasePath = System.getProperty("user.dir");
+                    new File(BasePath + File.separator + file.get().getPath()).delete();
                     filesDao.deleteById(id);
                 } else {
                     return new Result(400, "文件不存在");
@@ -145,6 +149,10 @@ public class UserService {
         }
         return new Result(200, "删除成功");
     }
+
+    /*
+    上传文件
+     */
 
     public Result uploadFile(MultipartFile file, String type, String description, Long user_id) throws IOException {
         String file_name = file.getOriginalFilename();
