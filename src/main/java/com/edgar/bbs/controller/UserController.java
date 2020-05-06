@@ -12,12 +12,14 @@ import com.edgar.bbs.utils.Result;
 import com.edgar.bbs.utils.UserInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +86,12 @@ public class UserController {
     @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
     public Result uploadFile(MultipartHttpServletRequest request) throws IOException {
         return userService.uploadFile(Objects.requireNonNull(request.getFile("file")), request.getParameter("type"), request.getParameter("description"), 1L);
+    }
+
+    @ApiOperation(value = "下载文件")
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
+    public Result downloadFile(@Param(value = "file_id") Long file_id, HttpServletResponse response) throws IOException {
+        return userService.downloadFile(response, file_id);
     }
 
     @ApiOperation(value = "修改用户的密码")

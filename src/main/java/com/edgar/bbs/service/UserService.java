@@ -13,9 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -156,7 +156,7 @@ public class UserService {
 
     public Result uploadFile(MultipartFile file, String type, String description, Long user_id) throws IOException {
         String file_name = file.getOriginalFilename();
-        if(file_name == null){
+        if (file_name == null) {
             file_name = "未命名";
         }
         try {
@@ -167,15 +167,53 @@ public class UserService {
                 f.mkdirs();
             }
             HashMap<String, String> map = FileUtil.dealWithFileName(file_name);
-            String name_to_store = map.get("name") +"."+ map.get("suffix");
+            String name_to_store = map.get("name") + "." + map.get("suffix");
             file.transferTo(new File(path + name_to_store));
-            filesDao.insertFile(description, map.get("origin") , PATH + File.separator + name_to_store, type, user_id);
+            filesDao.insertFile(description, map.get("origin"), PATH + File.separator + name_to_store, type, user_id);
             return new Result(200, "上传成功");
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(400, "上传失败，请重新上传");
 
         }
+    }
+
+    /*
+    下载文件
+     */
+    public Result downloadFile(HttpServletResponse response, Long id) throws IOException {
+        String basePath = System.getProperty("user.dir");
+        Optional<Files> file = filesDao.findById(id);
+        if (!file.isPresent()) {
+            return new Result(400, "没有对应的文件");
+        } else {
+            String path = basePath + File.separator + file.get().getPath();
+            File f = new File(path);
+            if (f.exists()) {
+                byte[] b = new byte[1024];
+                FileInputStream fis = null;
+                BufferedInputStream bis = null;
+                fis = new FileInputStream(f);
+                bis = new BufferedInputStream(fis);
+                try {
+                    OutputStream os = response.getOutputStream();
+                    int i = bis.read(b);
+                    while (i != -1) {
+                        os.write(b, 0, i);
+                        i = bis.read(b);
+                    }
+                    return new Result(200, "下载完成");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    bis.close();
+                    fis.close();
+                }
+            }
+            return new Result(200, "下载失败");
+        }
+
+
     }
 
 }
