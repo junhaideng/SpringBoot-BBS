@@ -21,7 +21,7 @@ public class Files {
     @Column(name = "userId", columnDefinition = "bigint", nullable = false)
     Long userId;
 
-    @Column(name = "fileName", columnDefinition = "varchar(30)", nullable = false)
+    @Column(name = "fileName", columnDefinition = "varchar(100)", nullable = false)
     String fileName;
 
     @Column(name = "type", columnDefinition = "varchar(10)", nullable = false)
@@ -36,7 +36,7 @@ public class Files {
     @Column(name = "description", columnDefinition = "text")
     String description;
 
-    @Column(name = "path", columnDefinition = "varchar(100)", nullable = false)
+    @Column(name = "path", columnDefinition = "varchar(200)", nullable = false)
     String path;
 
 }

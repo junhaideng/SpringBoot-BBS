@@ -13,11 +13,14 @@ import com.edgar.bbs.utils.UserInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Api(value = "用户相关")
@@ -75,6 +78,12 @@ public class UserController {
     @RequestMapping(value = "/delfiles", method = RequestMethod.POST)
     public Result delFiles(@RequestBody Long[] filesId){
         return userService.deleteFilesById(filesId);
+    }
+
+    @ApiOperation(value = "上传文件")
+    @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
+    public Result uploadFile(MultipartHttpServletRequest request) throws IOException {
+        return userService.uploadFile(Objects.requireNonNull(request.getFile("file")), request.getParameter("type"), request.getParameter("description"), 1L);
     }
 
     @ApiOperation(value = "修改用户的密码")
