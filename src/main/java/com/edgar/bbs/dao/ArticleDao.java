@@ -2,6 +2,7 @@ package com.edgar.bbs.dao;
 
 
 import com.edgar.bbs.domain.Article;
+import com.edgar.bbs.utils.SearchArticlesInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,8 @@ public interface ArticleDao extends JpaRepository<Article, Long> {
     @Modifying
     @Query(value = "INSERT INTO article(content, type, title, user_id) VALUES(:content, :type, :title, :user_id)", nativeQuery = true)
     void insertArticleByUserId(Long user_id, String title, String type, String content);
+
+    @Query(value = "SELECT DISTINCT title FROM article WHERE title LIKE %:q%", nativeQuery = true)
+    List<SearchArticlesInfo> findArticlesTitleContains(String q);
+
 }

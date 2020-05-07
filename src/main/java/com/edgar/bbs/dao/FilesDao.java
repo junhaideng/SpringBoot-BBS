@@ -1,15 +1,14 @@
 package com.edgar.bbs.dao;
 
 import com.edgar.bbs.domain.Files;
+import com.edgar.bbs.utils.SearchFilesInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
-import java.io.File;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 public interface FilesDao extends JpaRepository<Files, Long> {
@@ -22,4 +21,7 @@ public interface FilesDao extends JpaRepository<Files, Long> {
 
     @Query(value = "SELECT * FROM files WHERE file_name=:file_name AND user_id=:user_id", nativeQuery = true)
     List<Files> findFilesByFileNameAndUserId(String file_name, Long user_id);
+
+    @Query(value = "SELECT DISTINCT file_name FROM files WHERE file_name LIKE %:q%", nativeQuery = true)
+    List<SearchFilesInfo> findFileNameContains(String q);
 }
