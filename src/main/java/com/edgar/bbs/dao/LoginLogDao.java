@@ -12,6 +12,7 @@ public interface LoginLogDao extends JpaRepository<LoginLog, Long> {
     /*
     对登录日志的查询操作
      */
-    @Query(value = "SELECT ip, address, create_time FROM login_log WHERE user_id=:user_id", nativeQuery = true)
-    List<LoginLogInfo> findAllByUserId(@Param("user_id") Long user_id);
+    @Query(value = "SELECT ip, address, create_time FROM login_log WHERE username=:username", nativeQuery = true)
+    List<LoginLogInfo> findAllByUsername(@Param("username") String username);
+
 }

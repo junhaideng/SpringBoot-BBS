@@ -13,12 +13,12 @@ import java.util.List;
 @Transactional
 public interface ArticleDao extends JpaRepository<Article, Long> {
 
-    @Query(value = "SELECT * FROM article WHERE user_id=:userId", nativeQuery = true)
-    List<Article> findArticlesByUserId(Long userId);
+    @Query(value = "SELECT * FROM article WHERE username=:username", nativeQuery = true)
+    List<Article> findArticlesByUsername(String username);
 
     @Modifying
-    @Query(value = "INSERT INTO article(content, type, title, user_id) VALUES(:content, :type, :title, :user_id)", nativeQuery = true)
-    void insertArticleByUserId(Long user_id, String title, String type, String content);
+    @Query(value = "INSERT INTO article(content, type, title, username) VALUES(:content, :type, :title, :username)", nativeQuery = true)
+    void insertArticleByUsername(String username, String title, String type, String content);
 
     @Query(value = "SELECT DISTINCT title FROM article WHERE title LIKE %:q%", nativeQuery = true)
     List<SearchArticlesInfo> findArticlesTitleContains(String q);

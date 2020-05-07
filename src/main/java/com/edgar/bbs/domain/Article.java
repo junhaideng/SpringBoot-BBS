@@ -21,8 +21,9 @@ public class Article {
     @Column(name = "id", columnDefinition = "bigint")
     Long id;
 
-    @Column(name = "userId", columnDefinition = "bigint")
-    Long userId;
+
+    @Column(name = "username", columnDefinition = "varchar(40)")
+    String username;
 
     @Column(name = "title", columnDefinition = "varchar(200)")
     String title;

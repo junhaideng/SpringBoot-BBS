@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,40 +55,46 @@ public class UserController {
 
     @ApiOperation(value = "获取用户登录日志")
     @RequestMapping(value = "/loginlog", method = RequestMethod.POST)
-    public List<LoginLogInfo> getUserLoginLog(@RequestParam(value = "user_id") Long user_id) {
-        return loginLogDao.findAllByUserId(user_id);
+    public List<LoginLogInfo> getUserLoginLog(HttpSession session) {
+        return loginLogDao.findAllByUsername((String) session.getAttribute("username"));
     }
 
     @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.POST)
-    public UserInfo getUserInfo(@RequestParam(value = "username") String username) {
-        UserInfo user = userDao.getInfoUsingUsername(username);
-        System.out.println(user);
+    public UserInfo getUserInfo(HttpSession session) {
+        UserInfo user = userDao.getInfoUsingUsername((String) session.getAttribute("username"));
         return user;
+    }
+
+    @ApiOperation(value = "修改用户信息")
+    @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
+    public Result updateUserInfo(HttpServletRequest request){
+        return userService.updateUserInfo(request);
     }
 
     @ApiOperation(value = "获取用户的帖子")
     @RequestMapping(value = "/article", method = RequestMethod.POST)
-    public List<Article> getUserArticles(@RequestParam(value = "userId") Long userId) {
-        return articleDao.findArticlesByUserId(userId);
+    public List<Article> getUserArticles(HttpSession session) {
+        return articleDao.findArticlesByUsername((String) session.getAttribute("username"));
     }
 
     @ApiOperation(value = "获取用户的文件信息")
     @RequestMapping(value = "/files", method = RequestMethod.POST)
-    public List<Files> getUserFiles(@RequestParam(value = "userId") Long userId) {
-        return filesDao.findAllByUserId(userId);
+    public List<Files> getUserFiles(HttpSession session) {
+        return filesDao.findAllByUsername((String) session.getAttribute("username"));
     }
 
     @ApiOperation(value = "删除文件")
     @RequestMapping(value = "/delfiles", method = RequestMethod.POST)
-    public Result delFiles(@RequestBody Long[] filesId) {
-        return userService.deleteFilesById(filesId);
+    public Result delFiles(@RequestBody Long[] filesId, HttpSession session) {
+        return userService.deleteFilesByIdAndUsername(filesId, (String) session.getAttribute("username"));
+
     }
 
     @ApiOperation(value = "上传文件")
     @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
-    public Result uploadFile(MultipartHttpServletRequest request) throws IOException {
-        return userService.uploadFile(Objects.requireNonNull(request.getFile("file")), request.getParameter("type"), request.getParameter("description"), 1L);
+    public Result uploadFile(MultipartHttpServletRequest request, HttpSession session) throws IOException {
+        return userService.uploadFile(Objects.requireNonNull(request.getFile("file")), request.getParameter("type"), request.getParameter("description"), (String) session.getAttribute("username"));
     }
 
     @ApiOperation(value = "下载文件")
@@ -103,8 +111,9 @@ public class UserController {
 
     @ApiOperation(value = "删除用户")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public Result deleteUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
-        return userService.deleteUser(username, password);
+    public Result deleteUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password,HttpSession session) {
+        String real = session.getAttribute("username").toString();
+        return userService.deleteUser(username, password, real);
     }
 
     @ApiOperation(value = "用户注册")
@@ -115,24 +124,35 @@ public class UserController {
 
     @ApiOperation(value = "发帖")
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public Result post(@RequestParam(value = "title") String title, @RequestParam(value = "type") String type, @RequestParam(value = "content") String content, @RequestParam("user_id") Long user_id) {
-        return userService.postArticle(user_id, title, type, content);
+    public Result post(@RequestParam(value = "title") String title, @RequestParam(value = "type") String type, @RequestParam(value = "content") String content, HttpSession session) {
+        return userService.postArticle((String) session.getAttribute("username"), title, type, content);
     }
 
     @ApiOperation("获取信息设置")
     @RequestMapping(value = "/messageSettings", method = RequestMethod.POST)
-    public MessageSettingsInfo getMessageSettingsByUsername(@RequestParam(value = "username") String username) {
-        return userService.getMessageSettingsByUsername(username);
+    public MessageSettingsInfo getMessageSettingsByUsername(HttpSession session) {
+        return userService.getMessageSettingsByUsername((String) session.getAttribute("username"));
+
     }
 
     @ApiOperation("修改信息设置")
     @RequestMapping(value = "/changesettings", method = RequestMethod.POST)
-    public Result setMessageSettingsByUsername(@RequestBody(required = true) Map<String, Object> map) {
+    public Result setMessageSettingsByUsername(@RequestBody(required = true) Map<String, Object> map, HttpSession session) {
         System.out.println(map.get("comment").getClass());
         Boolean comment = (Boolean) map.get("comment");
         Boolean like = (Boolean) map.get("like");
         Boolean star = (Boolean) map.get("star");
-        String username = map.get("username").toString();
+        String username = (String) session.getAttribute("username");
         return userService.updateMessageSettings(comment, like, star, username);
+    }
+
+    @ApiOperation("获取信息通知")
+    @RequestMapping(value = "/message", method = RequestMethod.POST)
+    public String getMessage(HttpServletRequest request, HttpSession session) {
+        System.out.println(request.getSession().getAttribute("username"));
+        System.out.println(session.getAttribute("username"));
+        System.out.println(session.getAttribute("isLogin"));
+        System.out.println(Arrays.toString(request.getCookies()));
+        return "new";
     }
 }

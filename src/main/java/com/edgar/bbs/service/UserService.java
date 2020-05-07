@@ -107,26 +107,30 @@ public class UserService {
     /*
     用户的注销
      */
-    public Result deleteUser(String username, String password) {
-        Optional<User> user = userDao.findUserByUsername(username);
-        if (user.isPresent()) {
-            if (user.get().getPassword().equals(password)) {
-                userDao.deleteUserByUsername(username);
-                return new Result(200, "用户注销成功");
+    public Result deleteUser(String username, String password, String real) {
+        if (username.equals(real)) {
+            Optional<User> user = userDao.findUserByUsername(username);
+            if (user.isPresent()) {
+                if (user.get().getPassword().equals(password)) {
+                    userDao.deleteUserByUsername(username);
+                    return new Result(200, "用户注销成功");
+                } else {
+                    return new Result(400, "密码输入错误");
+                }
             } else {
-                return new Result(400, "密码输入错误");
+                return new Result(400, "无此用户");
             }
         } else {
-            return new Result(400, "无此用户");
+            return new Result(400, "当前登录用户与输入用户不一致");
         }
     }
 
     /*
     发帖
      */
-    public Result postArticle(Long user_id, String title, String type, String content) {
+    public Result postArticle(String username, String title, String type, String content) {
         try {
-            articleDao.insertArticleByUserId(user_id, title, type, content);
+            articleDao.insertArticleByUsername(username, title, type, content);
             return new Result(200, "发帖成功");
         } catch (Exception e) {
             return new Result(400, "发帖失败");
@@ -136,10 +140,10 @@ public class UserService {
     /*
     删除文件
      */
-    public Result deleteFilesById(Long[] filesId) {
+    public Result deleteFilesByIdAndUsername(Long[] filesId, String username) {
         try {
             for (Long id : filesId) {
-                Optional<Files> file = filesDao.findById(id);
+                Optional<Files> file = filesDao.findByIdAndUsername(id, username);
                 if (file.isPresent()) {
                     String BasePath = System.getProperty("user.dir");
                     new File(BasePath + File.separator + file.get().getPath()).delete();
@@ -159,7 +163,7 @@ public class UserService {
     上传文件
      */
 
-    public Result uploadFile(MultipartFile file, String type, String description, Long user_id) throws IOException {
+    public Result uploadFile(MultipartFile file, String type, String description, String username) throws IOException {
         String file_name = file.getOriginalFilename();
         if (file_name == null) {
             file_name = "未命名";
@@ -174,7 +178,7 @@ public class UserService {
             HashMap<String, String> map = FileUtil.dealWithFileName(file_name);
             String name_to_store = map.get("name") + "." + map.get("suffix");
             file.transferTo(new File(path + name_to_store));
-            filesDao.insertFile(description, map.get("origin"), PATH + File.separator + name_to_store, type, user_id);
+            filesDao.insertFile(description, map.get("origin"), PATH + File.separator + name_to_store, type, username);
             return new Result(200, "上传成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,16 +240,36 @@ public class UserService {
     /*
     获取通知设置
      */
-    public MessageSettingsInfo getMessageSettingsByUsername(String username){
+    public MessageSettingsInfo getMessageSettingsByUsername(String username) {
         return messageSettingsDao.findMessageSettingsUsingUsername(username);
     }
 
-    public Result setMessageSettingsByUsername(boolean comment, boolean like, boolean star,String username){
-        try{
+    public Result setMessageSettingsByUsername(boolean comment, boolean like, boolean star, String username) {
+        try {
             messageSettingsDao.updateMessageSettingsByUsername(comment, like, star, username);
             return new Result(200, "保存成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             return new Result(400, "修改失败，请重新修改");
+        }
+    }
+
+    /**
+     * 修改用户信息
+     */
+    public Result updateUserInfo(HttpServletRequest request) {
+        try {
+            String username = (String) request.getSession().getAttribute("username");
+            String academy = request.getParameter("academy");
+            String gender = request.getParameter("gender");
+            Integer age = Integer.parseInt(request.getParameter("age"));
+            String grade = request.getParameter("grade");
+            String email = request.getParameter("email");
+            String description = request.getParameter("description");
+            String avatar = request.getParameter("avatar");
+            userDao.updateInfo(username, academy, gender, age, grade, email, description, avatar);
+            return new Result(200, "修改成功");
+        }catch (Exception e){
+            return new Result(400, "修改失败, 请重新修改");
         }
     }
 }

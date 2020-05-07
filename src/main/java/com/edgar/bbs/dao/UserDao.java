@@ -24,13 +24,11 @@ public interface UserDao extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM user WHERE username=:username", nativeQuery = true)
     Optional<User> findUserByUsername(@Param("username") String username);
 
-    @Query(value = "SELECT * FROM user WHERE id=:id", nativeQuery = true)
-    Optional<User> findUserById(@Param("id") Long id);
 
     @Query(value = "SELECT * FROM user WHERE academy=:academy", nativeQuery = true)
     List<User> findUsersByAcademy(@Param("academy") String academy);
 
-    @Query(value = "SELECT id, username, academy, avatar, email, gender, create_time, grade, age, description FROM user WHERE username=:username", nativeQuery = true)
+    @Query(value = "SELECT  username, academy, avatar, email, gender, create_time, grade, age, description FROM user WHERE username=:username", nativeQuery = true)
     UserInfo getInfoUsingUsername(@Param(value = "username") String username);
 
     @Modifying
@@ -44,4 +42,8 @@ public interface UserDao extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "DELETE FROM user WHERE username=:username", nativeQuery = true)
     void deleteUserByUsername(@Param(value = "username") String username);
+
+    @Modifying
+    @Query(value = "UPDATE user SET academy=?2, gender=?3, age=?4, grade=?5, email=?6, description=?7, avatar=?8 WHERE username=?1", nativeQuery = true)
+    void updateInfo(String username, String academy, String gender, Integer age, String grade, String email, String description, String avatar);
 }

@@ -18,8 +18,8 @@ public class Files {
     @Column(name = "id", columnDefinition = "bigint", nullable = false, unique = true)
     Long id;
 
-    @Column(name = "userId", columnDefinition = "bigint", nullable = false)
-    Long userId;
+    @Column(name = "username", columnDefinition = "varchar(40)")
+    String username;
 
     @Column(name = "fileName", columnDefinition = "varchar(100)", nullable = false)
     String fileName;

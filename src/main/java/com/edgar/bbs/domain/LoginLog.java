@@ -19,8 +19,8 @@ public class LoginLog {
     @Column(name = "id", columnDefinition = "bigint", nullable = false, unique = true)
     Long id;
 
-    @Column(name = "userId", columnDefinition = "bigint")
-    Long userId;
+    @Column(name = "username", columnDefinition = "varchar(40)")
+    String username;
 
    @Column(name = "ip", columnDefinition = "varchar(20)", nullable = false)
     String ip;
