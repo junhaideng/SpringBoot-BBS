@@ -2,10 +2,12 @@ package com.edgar.bbs.service;
 
 import com.edgar.bbs.dao.ArticleDao;
 import com.edgar.bbs.dao.FilesDao;
+import com.edgar.bbs.dao.MessageSettingsDao;
 import com.edgar.bbs.dao.UserDao;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.domain.User;
 import com.edgar.bbs.utils.FileUtil;
+import com.edgar.bbs.utils.MessageSettingsInfo;
 import com.edgar.bbs.utils.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ public class UserService {
 
     @Resource
     private FilesDao filesDao;
+
+    @Resource
+    private MessageSettingsDao messageSettingsDao;
 
     @Value("${upload.files}")  // 获取配置中的文件上传路径
     private String PATH;
@@ -216,4 +221,31 @@ public class UserService {
 
     }
 
+    /*
+    通知修改
+     */
+    public Result updateMessageSettings(boolean comment, boolean like, boolean star, String username) {
+        try {
+            messageSettingsDao.updateMessageSettingsByUsername(comment, like, star, username);
+            return new Result(200, "修改成功");
+        } catch (Exception e) {
+            return new Result(400, "修改失败，请重新修改");
+        }
+    }
+
+    /*
+    获取通知设置
+     */
+    public MessageSettingsInfo getMessageSettingsByUsername(String username){
+        return messageSettingsDao.findMessageSettingsUsingUsername(username);
+    }
+
+    public Result setMessageSettingsByUsername(boolean comment, boolean like, boolean star,String username){
+        try{
+            messageSettingsDao.updateMessageSettingsByUsername(comment, like, star, username);
+            return new Result(200, "保存成功");
+        }catch (Exception e){
+            return new Result(400, "修改失败，请重新修改");
+        }
+    }
 }

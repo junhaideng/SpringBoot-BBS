@@ -8,13 +8,13 @@ import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.service.UserService;
 import com.edgar.bbs.utils.LoginLogInfo;
+import com.edgar.bbs.utils.MessageSettingsInfo;
 import com.edgar.bbs.utils.Result;
 import com.edgar.bbs.utils.UserInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -78,7 +79,7 @@ public class UserController {
 
     @ApiOperation(value = "删除文件")
     @RequestMapping(value = "/delfiles", method = RequestMethod.POST)
-    public Result delFiles(@RequestBody Long[] filesId){
+    public Result delFiles(@RequestBody Long[] filesId) {
         return userService.deleteFilesById(filesId);
     }
 
@@ -108,13 +109,30 @@ public class UserController {
 
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public Result signUp(HttpServletRequest request){
+    public Result signUp(HttpServletRequest request) {
         return userService.signUp(request);
     }
 
     @ApiOperation(value = "发帖")
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public Result post(@RequestParam(value = "title") String title, @RequestParam(value="type") String type, @RequestParam(value = "content") String content, @RequestParam("user_id") Long user_id){
+    public Result post(@RequestParam(value = "title") String title, @RequestParam(value = "type") String type, @RequestParam(value = "content") String content, @RequestParam("user_id") Long user_id) {
         return userService.postArticle(user_id, title, type, content);
+    }
+
+    @ApiOperation("获取信息设置")
+    @RequestMapping(value = "/messageSettings", method = RequestMethod.POST)
+    public MessageSettingsInfo getMessageSettingsByUsername(@RequestParam(value = "username") String username) {
+        return userService.getMessageSettingsByUsername(username);
+    }
+
+    @ApiOperation("修改信息设置")
+    @RequestMapping(value = "/changesettings", method = RequestMethod.POST)
+    public Result setMessageSettingsByUsername(@RequestBody(required = true) Map<String, Object> map) {
+        System.out.println(map.get("comment").getClass());
+        Boolean comment = (Boolean) map.get("comment");
+        Boolean like = (Boolean) map.get("like");
+        Boolean star = (Boolean) map.get("star");
+        String username = map.get("username").toString();
+        return userService.updateMessageSettings(comment, like, star, username);
     }
 }
