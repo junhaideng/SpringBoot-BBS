@@ -1,16 +1,14 @@
 package com.edgar.bbs.controller;
 
-import com.edgar.bbs.dao.ArticleDao;
-import com.edgar.bbs.dao.FilesDao;
-import com.edgar.bbs.dao.LoginLogDao;
-import com.edgar.bbs.dao.UserDao;
+import com.edgar.bbs.dao.*;
+import com.edgar.bbs.dao.info.LoginLogInfo;
+import com.edgar.bbs.dao.info.MessageInfo;
+import com.edgar.bbs.dao.info.MessageSettingsInfo;
+import com.edgar.bbs.dao.info.UserInfo;
 import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.service.UserService;
-import com.edgar.bbs.utils.LoginLogInfo;
-import com.edgar.bbs.utils.MessageSettingsInfo;
-import com.edgar.bbs.utils.Result;
-import com.edgar.bbs.utils.UserInfo;
+import com.edgar.bbs.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,6 +42,9 @@ public class UserController {
 
     @Resource
     private FilesDao filesDao;
+
+    @Resource
+    private MessageDao messageDao;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "用户登录", notes = "用户登录")
@@ -148,11 +148,7 @@ public class UserController {
 
     @ApiOperation("获取信息通知")
     @RequestMapping(value = "/message", method = RequestMethod.POST)
-    public String getMessage(HttpServletRequest request, HttpSession session) {
-        System.out.println(request.getSession().getAttribute("username"));
-        System.out.println(session.getAttribute("username"));
-        System.out.println(session.getAttribute("isLogin"));
-        System.out.println(Arrays.toString(request.getCookies()));
-        return "new";
+    public List<MessageInfo> getMessage(HttpSession session) {
+        return messageDao.getMessageByUsername((String)session.getAttribute("username"));
     }
 }

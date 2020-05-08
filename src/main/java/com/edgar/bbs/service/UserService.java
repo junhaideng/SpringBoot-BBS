@@ -7,7 +7,7 @@ import com.edgar.bbs.dao.UserDao;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.domain.User;
 import com.edgar.bbs.utils.FileUtil;
-import com.edgar.bbs.utils.MessageSettingsInfo;
+import com.edgar.bbs.dao.info.MessageSettingsInfo;
 import com.edgar.bbs.utils.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

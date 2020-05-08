@@ -1,7 +1,7 @@
 package com.edgar.bbs.dao;
 
 import com.edgar.bbs.domain.User;
-import com.edgar.bbs.utils.UserInfo;
+import com.edgar.bbs.dao.info.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

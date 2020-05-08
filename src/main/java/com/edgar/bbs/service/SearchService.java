@@ -3,8 +3,8 @@ package com.edgar.bbs.service;
 
 import com.edgar.bbs.dao.ArticleDao;
 import com.edgar.bbs.dao.FilesDao;
-import com.edgar.bbs.utils.SearchArticlesInfo;
-import com.edgar.bbs.utils.SearchFilesInfo;
+import com.edgar.bbs.dao.info.SearchArticlesInfo;
+import com.edgar.bbs.dao.info.SearchFilesInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

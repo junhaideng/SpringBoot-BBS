@@ -1,4 +1,4 @@
-package com.edgar.bbs.utils;
+package com.edgar.bbs.dao.info;
 
 public interface SearchFilesInfo {
      /*

@@ -1,7 +1,7 @@
 package com.edgar.bbs.dao;
 
 import com.edgar.bbs.domain.MessageSettings;
-import com.edgar.bbs.utils.MessageSettingsInfo;
+import com.edgar.bbs.dao.info.MessageSettingsInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
