@@ -3,13 +3,15 @@ package com.edgar.bbs.dao.info;
 import java.util.Date;
 
 public interface MessageInfo {
-    Integer getType();
+    Long getId();
+
+     String getType();
 
      String getTitle();
 
      String getContent();
 
-     Date getTime();
+     String getTime();
 
-     boolean isRead();
+     Boolean getRead();
 }

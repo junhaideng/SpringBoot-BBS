@@ -20,8 +20,8 @@ public class Message {
     /*
     通知的类型
      */
-    @Column(name = "type", columnDefinition = "tinyint(1)")
-    Integer type;
+    @Column(name = "`type`", columnDefinition = "varchar(20)")
+    String type;
 
     /*
     username
@@ -46,12 +46,12 @@ public class Message {
     通知发布的时间
      */
     @Column(name = "time", columnDefinition = "datetime default now()")
-    Date time;
+    String time;
 
     /*
     是否已经阅读
      */
-    @Column(name = "read", columnDefinition = "boolean default false")
-    boolean read;
+    @Column(name = "`read`", columnDefinition = "boolean default false")
+    Boolean read;
 
 }

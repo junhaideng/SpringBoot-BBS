@@ -1,5 +1,6 @@
 package com.edgar.bbs.dao;
 
+import com.edgar.bbs.dao.info.CarouselInfo;
 import com.edgar.bbs.domain.Carousel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,8 +14,8 @@ public interface CarouselDao extends JpaRepository<Carousel, Long> {
     /**
      * 轮播图的相关数据库操作
      */
-    @Query(value = "SELECT url FROM carousel WHERE active=? ", nativeQuery = true)
-    List<Carousel> findAllByActive(Boolean active);
+    @Query(value = "SELECT DISTINCT title, url FROM carousel WHERE `active`=? LIMIT ?", nativeQuery = true)
+    List<CarouselInfo> findAllByActive(Integer active, Integer num);
 
 
     @Modifying

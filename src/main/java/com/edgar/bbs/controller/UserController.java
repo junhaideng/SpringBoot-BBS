@@ -8,7 +8,7 @@ import com.edgar.bbs.dao.info.UserInfo;
 import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.service.UserService;
-import com.edgar.bbs.utils.*;
+import com.edgar.bbs.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,7 +69,7 @@ public class UserController {
 
     @ApiOperation(value = "修改用户信息")
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
-    public Result updateUserInfo(HttpServletRequest request){
+    public Result updateUserInfo(HttpServletRequest request) {
         return userService.updateUserInfo(request);
     }
 
@@ -111,7 +112,7 @@ public class UserController {
 
     @ApiOperation(value = "删除用户")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public Result deleteUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password,HttpSession session) {
+    public Result deleteUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, HttpSession session) {
         String real = session.getAttribute("username").toString();
         return userService.deleteUser(username, password, real);
     }
@@ -149,6 +150,40 @@ public class UserController {
     @ApiOperation("获取信息通知")
     @RequestMapping(value = "/message", method = RequestMethod.POST)
     public List<MessageInfo> getMessage(HttpSession session) {
-        return messageDao.getMessageByUsername((String)session.getAttribute("username"));
+        return messageDao.getAllByUsername((String) session.getAttribute("username"));
     }
+
+    @ApiOperation("获取未读信息总数")
+    @RequestMapping(value = "/message/unread", method = RequestMethod.POST)
+    public Map getUnreadMessage(HttpSession session) {
+        Long num = messageDao.getUnreadMessage((String) session.getAttribute("username"));
+        HashMap<String, Long> map = new HashMap<>();
+        map.put("unread", num);
+        return map;
+    }
+
+    @ApiOperation("删除信息")
+    @RequestMapping(value = "/message/delete", method = RequestMethod.POST)
+    public Result deleteMessageById(@RequestParam("id") Long id, HttpSession session) {
+        return userService.deleteMessageById((String) session.getAttribute("username"), id);
+    }
+
+    @ApiOperation("已读信息")
+    @RequestMapping(value = "/message/read", method = RequestMethod.POST)
+    public Result readMessageById(@RequestParam("id") Long id, HttpSession session) {
+        return userService.readMessageById((String) session.getAttribute("username"), id);
+    }
+
+    @ApiOperation("清空全部信息")
+    @RequestMapping(value = "/message/clear_all", method = RequestMethod.POST)
+    public Result clearAllByUsername(HttpSession session){
+        return userService.clearAllByUsername((String) session.getAttribute("username"));
+    }
+
+    @ApiOperation("全部标记为已读")
+    @RequestMapping(value = "/message/read_all", method = RequestMethod.POST)
+    public Result readAllByUsername(HttpSession session){
+        return userService.readAllByUsername((String) session.getAttribute("username"));
+    }
+
 }

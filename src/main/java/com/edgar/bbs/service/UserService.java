@@ -1,13 +1,11 @@
 package com.edgar.bbs.service;
 
-import com.edgar.bbs.dao.ArticleDao;
-import com.edgar.bbs.dao.FilesDao;
-import com.edgar.bbs.dao.MessageSettingsDao;
-import com.edgar.bbs.dao.UserDao;
+import com.edgar.bbs.dao.*;
+import com.edgar.bbs.dao.info.MessageSettingsInfo;
 import com.edgar.bbs.domain.Files;
+import com.edgar.bbs.domain.Message;
 import com.edgar.bbs.domain.User;
 import com.edgar.bbs.utils.FileUtil;
-import com.edgar.bbs.dao.info.MessageSettingsInfo;
 import com.edgar.bbs.utils.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,6 +35,9 @@ public class UserService {
 
     @Resource
     private MessageSettingsDao messageSettingsDao;
+
+    @Resource
+    private MessageDao messageDao;
 
     @Value("${upload.files}")  // 获取配置中的文件上传路径
     private String PATH;
@@ -268,8 +269,66 @@ public class UserService {
             String avatar = request.getParameter("avatar");
             userDao.updateInfo(username, academy, gender, age, grade, email, description, avatar);
             return new Result(200, "修改成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             return new Result(400, "修改失败, 请重新修改");
+        }
+    }
+
+    /**
+     * 按照id删除信息
+     */
+    public Result deleteMessageById(String username, Long id) {
+        Optional<Message> message = messageDao.findMessageByUsernameAndId(username, id);
+        if (message.isPresent()) {
+            try {
+                messageDao.deleteMessageById(id);
+                return new Result(200, "删除成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Result(400, "删除失败");
+            }
+        } else {
+            // 该通知并不属于该用户
+            return new Result(400, "权限错误");
+        }
+    }
+
+    /**
+     * 按照id标记信息为已读
+     */
+    public Result readMessageById(String username, Long id) {
+        Optional<Message> message = messageDao.findMessageByUsernameAndId(username, id);
+        if (message.isPresent()) {
+            try {
+                messageDao.readMessageById(id);
+                return new Result(200, "标记为已读成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Result(400, "标记失败");
+            }
+        } else {
+            // 该通知并不属于该用户
+            return new Result(400, "权限错误");
+        }
+    }
+
+    public Result clearAllByUsername(String username) {
+        try {
+            messageDao.deleteMessageByUsername(username);
+            return new Result(200, "删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(400, "删除失败");
+        }
+    }
+
+    public Result readAllByUsername(String username){
+        try{
+            messageDao.updateByUsername(username);
+            return new Result(200, "标记成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(400, "标记失败");
         }
     }
 }
