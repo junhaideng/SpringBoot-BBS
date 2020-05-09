@@ -14,7 +14,7 @@ public interface CarouselDao extends JpaRepository<Carousel, Long> {
     /**
      * 轮播图的相关数据库操作
      */
-    @Query(value = "SELECT DISTINCT title, url FROM carousel WHERE `active`=? LIMIT ?", nativeQuery = true)
+    @Query(value = "SELECT id FROM carousel WHERE `active`=? LIMIT ?", nativeQuery = true)
     List<CarouselInfo> findAllByActive(Integer active, Integer num);
 
 
@@ -23,6 +23,7 @@ public interface CarouselDao extends JpaRepository<Carousel, Long> {
     void updateCarouselById(Long id);
 
     @Modifying
-    @Query(value = "INSERT INTO carousel(title, url, active) VALUES(:title, :url, :active)", nativeQuery = true)
-    void insertCarousel(String title, String url, Boolean active);
+    @Query(value = "INSERT INTO carousel(  active, path, filename) VALUES(?1, ?2, ?3)", nativeQuery = true)
+    void insertCarousel(Boolean active, String path, String filename);
+
 }

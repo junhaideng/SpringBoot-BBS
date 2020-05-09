@@ -18,12 +18,9 @@ public class Carousel {
      * 轮播图
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "bigint")
     Long id;
-
-    @Column(name = "title", columnDefinition = "varchar(30)")
-    String title;
 
     @Column(name = "url", columnDefinition = "varchar(100)")
     String url;
@@ -33,4 +30,10 @@ public class Carousel {
 
     @Column(name = "active", columnDefinition = "boolean default true")
     Boolean active;
+
+    @Column(name = "path", columnDefinition = "varchar(200)", nullable = false)
+    String path;
+
+    @Column(name = "filename", columnDefinition = "varchar(40)")
+    String filename;
 }

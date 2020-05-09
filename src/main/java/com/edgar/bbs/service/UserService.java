@@ -39,6 +39,9 @@ public class UserService {
     @Resource
     private MessageDao messageDao;
 
+    @Resource
+    private FileService fileService;
+
     @Value("${upload.files}")  // 获取配置中的文件上传路径
     private String PATH;
 
@@ -192,38 +195,8 @@ public class UserService {
     下载文件
      */
     public Result downloadFile(HttpServletResponse response, Long id) throws IOException {
-        String basePath = System.getProperty("user.dir");
         Optional<Files> file = filesDao.findById(id);
-        if (!file.isPresent()) {
-            return new Result(400, "没有对应的文件");
-        } else {
-            String path = basePath + File.separator + file.get().getPath();
-            File f = new File(path);
-            if (f.exists()) {
-                byte[] b = new byte[1024];
-                FileInputStream fis = null;
-                BufferedInputStream bis = null;
-                fis = new FileInputStream(f);
-                bis = new BufferedInputStream(fis);
-                try {
-                    OutputStream os = response.getOutputStream();
-                    int i = bis.read(b);
-                    while (i != -1) {
-                        os.write(b, 0, i);
-                        i = bis.read(b);
-                    }
-                    return new Result(200, "下载完成");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    bis.close();
-                    fis.close();
-                }
-            }
-            return new Result(200, "下载失败");
-        }
-
-
+        return fileService.transferFile(response, file, id);
     }
 
     /*

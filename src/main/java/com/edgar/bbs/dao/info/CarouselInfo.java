@@ -4,7 +4,5 @@ public interface CarouselInfo {
     /**
      * 自定义查询
      */
-    String getTitle();
-
-    String getUrl();
+    String getId();
 }
