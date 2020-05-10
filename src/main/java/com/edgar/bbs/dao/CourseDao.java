@@ -10,4 +10,7 @@ import java.util.List;
 public interface CourseDao extends JpaRepository<Course, Long> {
     @Query(value = "SELECT DISTINCT school FROM course", nativeQuery = true)
     List<SchoolInfo> getSchool();
+
+    @Query(value = "SELECT * FROM course WHERE school=?1", nativeQuery = true)
+    List<Course> getCourseBySchool(String school);
 }
