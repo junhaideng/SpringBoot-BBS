@@ -62,8 +62,8 @@ public class CommunityController {
     @RequestMapping(value = "/reply", method = RequestMethod.POST)
     public Result replyArticleById(@RequestParam("id") Long id,@RequestParam("reply") String reply, HttpSession session){
        String username = (String) session.getAttribute("username");
-        if(username.equals("")){
-            return new Result(400, "请登录");
+        if(username==null || username.trim().equals("")){
+            return new Result(400, "您还没有登录，请登录");
         }else{
             return communityService.writeReplyToArticle(id, reply, username);
         }
