@@ -23,4 +23,6 @@ public interface ArticleDao extends JpaRepository<Article, Long> {
     @Query(value = "SELECT DISTINCT title FROM article WHERE title LIKE %:q%", nativeQuery = true)
     List<SearchArticlesInfo> findArticlesTitleContains(String q);
 
+    @Query(value = "SELECT * from article ORDER BY `read` DESC LIMIT 10 OFFSET ?1", nativeQuery = true)
+    List<Article> findHotArticle(Integer page);
 }
