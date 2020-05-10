@@ -3,8 +3,10 @@ package com.edgar.bbs.controller;
 import com.edgar.bbs.dao.ArticleDao;
 import com.edgar.bbs.dao.ReplyDao;
 import com.edgar.bbs.domain.Article;
+import com.edgar.bbs.domain.JwcNotice;
 import com.edgar.bbs.domain.Reply;
 import com.edgar.bbs.service.CommunityService;
+import com.edgar.bbs.service.JwcService;
 import com.edgar.bbs.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +33,9 @@ public class CommunityController {
 
     @Resource
     CommunityService communityService;
+
+    @Resource
+    private JwcService jwcService;
 
     @Value("${article.hot.num}")
     private Integer NUM;
@@ -69,5 +74,11 @@ public class CommunityController {
     public List<Article> getHotArticle(@RequestParam("page") Integer page){
         page = (page-1) * NUM;
         return articleDao.findHotArticle( page);
+    }
+
+    @ApiOperation("获取教务处的通知信息")
+    @RequestMapping(value = "/jwc")
+    public List<JwcNotice> getJwcNotice(){
+        return jwcService.getNewNotice();
     }
 }
