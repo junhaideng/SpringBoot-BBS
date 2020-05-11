@@ -33,3 +33,7 @@
 - 搜索
 
 - 通知设置
+
+
+### Demo
+<img src="https://github.com/Cyberist-Edgar/bbs/raw/master/demo.gif" alt="demo"/>
