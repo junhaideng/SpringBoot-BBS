@@ -38,7 +38,6 @@ public class JwcService {
             List<String> pubDateArray = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
                     String title = matcher.group(1);
@@ -47,8 +46,6 @@ public class JwcService {
                     titleArray.add(title);
                     linkArray.add(link);
                     pubDateArray.add(pubDate);
-                    System.out.println(title);
-                    System.out.println(pubDate);
                 }
             }
             int length = titleArray.size();

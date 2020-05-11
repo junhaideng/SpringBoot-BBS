@@ -1,8 +1,7 @@
 package com.edgar.bbs.service;
 
-import com.edgar.bbs.dao.FilesDao;
-import com.edgar.bbs.domain.Files;
-import com.edgar.bbs.utils.FileUtil;
+import com.edgar.bbs.dao.AvatarDao;
+import com.edgar.bbs.domain.Avatar;
 import com.edgar.bbs.utils.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,31 +10,26 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
 import java.util.Optional;
 
-/**
- * 文件
- */
 @Service
-public class FileService {
-    @Value("${upload.files}")  // 获取配置中的文件上传路径
+public class AvatarService {
+    @Value("${upload.avatar}")  // 获取配置中的文件上传路径
     private String PATH;
 
+    @Value("${bbs.user.default.avatar}")
+    private String AVATAR;
+
+    private String basePath = System.getProperty("user.dir");
+
     @Resource
-    private FilesDao filesDao;
+    private AvatarDao avatarDao;
 
-
-    public Result getFile(HttpServletResponse response, Long id) throws IOException {
-        Optional<Files> file = filesDao.findById(id);
-        String basePath = System.getProperty("user.dir");
-        if (!file.isPresent()) {
+    public Result getAvatar(HttpServletResponse response, Optional<Avatar> avatar) throws IOException {
+        if (!avatar.isPresent()) {
             return new Result(400, "没有对应的文件");
         } else {
-            Long downloadTimes = file.get().getDownloadTimes() + 1;
-            file.get().setDownloadTimes(downloadTimes);
-            filesDao.saveAndFlush(file.get());
-            String path = basePath + File.separator + PATH + File.separator + file.get().getPath();
+            String path = basePath + File.separator + PATH + File.separator + avatar.get().getPath();
             File f = new File(path);
             if (f.exists()) {
                 byte[] b = new byte[1024];
@@ -50,7 +44,7 @@ public class FileService {
                         os.write(b, 0, i);
                         i = bis.read(b);
                     }
-                    return new Result(200, "文件传送完成");
+                    return new Result(200, "下载完成");
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -58,32 +52,48 @@ public class FileService {
                     fis.close();
                 }
             }
-            return new Result(200, "文件传输失败");
+            return new Result(400, "下载失败");
         }
     }
 
-    public Result uploadFile(MultipartFile file, String type, String description, String username) throws IOException {
+    public Result uploadAvatar(MultipartFile file, String username) {
         String file_name = file.getOriginalFilename();
-        if (file_name == null) {
-            file_name = "未命名";
-        }
         try {
+            deleteAvatar(username);
             String BasePath = System.getProperty("user.dir");
             String path = BasePath + PATH + File.separator;
             File f = new File(path);
             if (!f.exists()) {
                 f.mkdirs();
             }
-            HashMap<String, String> map = FileUtil.dealWithFileName(file_name);
-            String name_to_store = map.get("name") + "." + map.get("suffix");
-            file.transferTo(new File(path + name_to_store));
-            filesDao.insertFile(description, map.get("origin"), name_to_store, type, username);
+            if( file_name!=null&&file_name.contains(".")){
+                String ext = file_name.split("\\.")[1];
+                file_name = username + "." + ext;
+            }else{
+                file_name = username;
+            }
+            file.transferTo(new File(path + file_name));
+            avatarDao.updateByUsername( file_name, username);
             return new Result(200, "上传成功");
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(400, "上传失败，请重新上传");
-
         }
     }
 
+    public void deleteAvatar(String username){
+        Optional<Avatar> avatar  = avatarDao.getAvatarByUsername(username);
+
+        if(avatar.isPresent()){
+            if(avatar.get().getPath().equals(AVATAR )){
+                return;
+            }
+            System.out.println(avatar.get().getPath());
+            File f = new File(basePath +  File.separator +PATH+File.separator + avatar.get().getPath());
+            System.out.println(f.exists());
+            if(f.exists()){
+                f.delete();
+            }
+        }
+    }
 }

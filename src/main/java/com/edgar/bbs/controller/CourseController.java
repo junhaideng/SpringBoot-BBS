@@ -2,6 +2,7 @@ package com.edgar.bbs.controller;
 
 import com.edgar.bbs.dao.CourseCommentsDao;
 import com.edgar.bbs.dao.CourseDao;
+import com.edgar.bbs.dao.info.CourseSetInfo;
 import com.edgar.bbs.dao.info.SchoolInfo;
 import com.edgar.bbs.domain.Course;
 import com.edgar.bbs.domain.CourseComments;
@@ -33,6 +34,18 @@ public class CourseController {
     @RequestMapping("/get_all_school")
     public List<SchoolInfo> getAllSchool() {
         return courseDao.getSchool();
+    }
+
+    @ApiOperation("获取所有的课程")
+    @RequestMapping("/get_all_course")
+    public List<CourseSetInfo> getAllCourse(){
+        return courseDao.getCourse();
+    }
+
+    @ApiOperation("自动获取课程")
+    @RequestMapping("/get_by_value")
+    public List<CourseSetInfo> getByValue(@RequestParam("value") String value){
+        return courseDao.getCourseByValue(value);
     }
 
     @ApiOperation("根据学院查询课程")
