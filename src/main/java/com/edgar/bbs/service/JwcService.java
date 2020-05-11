@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,17 +30,30 @@ public class JwcService {
             InputStream is = urlConnection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "gb2312"));
             String line = null;
-            Integer num = 0;
+            int num = 0;
+
             Pattern pattern = Pattern.compile("<item><title>(.*?)</title><link>(.*?)</link><pubDate>(.*?)</pubDate></item>");
-            while ((line = br.readLine()) != null && num < 10) {
+            List<String> titleArray = new ArrayList<>();
+            List<String> linkArray = new ArrayList<>();
+            List<String> pubDateArray = new ArrayList<>();
+
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
                     String title = matcher.group(1);
                     String link = matcher.group(2);
                     String pubDate = matcher.group(3);
-                    jwcNoticeDao.insert(title, link, pubDate);
-                    num++;
+                    titleArray.add(title);
+                    linkArray.add(link);
+                    pubDateArray.add(pubDate);
+                    System.out.println(title);
+                    System.out.println(pubDate);
                 }
+            }
+            int length = titleArray.size();
+            for(num=1; num<=10; num++){
+                jwcNoticeDao.insert(titleArray.get(length-num), linkArray.get(length-num), pubDateArray.get(length-num));
             }
         } catch (Exception e) {
             e.printStackTrace();

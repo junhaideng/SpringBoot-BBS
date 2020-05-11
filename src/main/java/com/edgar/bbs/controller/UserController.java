@@ -98,11 +98,7 @@ public class UserController {
         return userService.uploadFile(Objects.requireNonNull(request.getFile("file")), request.getParameter("type"), request.getParameter("description"), (String) session.getAttribute("username"));
     }
 
-    @ApiOperation(value = "下载文件")
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public Result downloadFile(@Param(value = "file_id") Long file_id, HttpServletResponse response) throws IOException {
-        return userService.downloadFile(response, file_id);
-    }
+
 
     @ApiOperation(value = "修改用户的密码")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -126,7 +122,11 @@ public class UserController {
     @ApiOperation(value = "发帖")
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public Result post(@RequestParam(value = "title") String title, @RequestParam(value = "type") String type, @RequestParam(value = "content") String content, HttpSession session) {
-        return userService.postArticle((String) session.getAttribute("username"), title, type, content);
+        String username = (String) session.getAttribute("username");
+        if(username == null ){
+            return new Result(200, "请先登录");
+        }
+        return userService.postArticle(username, title, type, content);
     }
 
     @ApiOperation("获取信息设置")
@@ -139,11 +139,13 @@ public class UserController {
     @ApiOperation("修改信息设置")
     @RequestMapping(value = "/changesettings", method = RequestMethod.POST)
     public Result setMessageSettingsByUsername(@RequestBody(required = true) Map<String, Object> map, HttpSession session) {
-        System.out.println(map.get("comment").getClass());
         Boolean comment = (Boolean) map.get("comment");
         Boolean like = (Boolean) map.get("like");
         Boolean star = (Boolean) map.get("star");
         String username = (String) session.getAttribute("username");
+        if(username == null){
+            return new Result(400, "请先进行登录");
+        }
         return userService.updateMessageSettings(comment, like, star, username);
     }
 
@@ -165,25 +167,41 @@ public class UserController {
     @ApiOperation("删除信息")
     @RequestMapping(value = "/message/delete", method = RequestMethod.POST)
     public Result deleteMessageById(@RequestParam("id") Long id, HttpSession session) {
-        return userService.deleteMessageById((String) session.getAttribute("username"), id);
+        String username = (String) session.getAttribute("username");
+        if(username == null){
+            return new Result(400, "请先进行登录");
+        }
+        return userService.deleteMessageById(username, id);
     }
 
     @ApiOperation("已读信息")
     @RequestMapping(value = "/message/read", method = RequestMethod.POST)
     public Result readMessageById(@RequestParam("id") Long id, HttpSession session) {
-        return userService.readMessageById((String) session.getAttribute("username"), id);
+        String username = (String) session.getAttribute("username");
+        if(username == null){
+            return new Result(400, "请先进行登录");
+        }
+        return userService.readMessageById(username, id);
     }
 
     @ApiOperation("清空全部信息")
     @RequestMapping(value = "/message/clear_all", method = RequestMethod.POST)
     public Result clearAllByUsername(HttpSession session){
-        return userService.clearAllByUsername((String) session.getAttribute("username"));
+        String username = (String) session.getAttribute("username");
+        if(username == null){
+            return new Result(400, "请先进行登录");
+        }
+        return userService.clearAllByUsername(username);
     }
 
     @ApiOperation("全部标记为已读")
     @RequestMapping(value = "/message/read_all", method = RequestMethod.POST)
     public Result readAllByUsername(HttpSession session){
-        return userService.readAllByUsername((String) session.getAttribute("username"));
+        String username = (String) session.getAttribute("username");
+        if(username == null){
+            return new Result(400, "请先进行登录");
+        }
+        return userService.readAllByUsername(username);
     }
 
 }

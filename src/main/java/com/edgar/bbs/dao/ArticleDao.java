@@ -25,4 +25,18 @@ public interface ArticleDao extends JpaRepository<Article, Long> {
 
     @Query(value = "SELECT * from article ORDER BY `read` DESC LIMIT 10 OFFSET ?1", nativeQuery = true)
     List<Article> findHotArticle(Integer page);
+
+    @Modifying
+    @Query(value = "UPDATE article SET `read`=?1 WHERE id=?2", nativeQuery = true)
+    void updateReadById(Long read, Long id);
+
+    @Modifying
+    @Query(value = "UPDATE article SET star=?1 WHERE id=?2", nativeQuery = true)
+    void updateStarById(Long star, Long id);
+
+    @Modifying
+    @Query(value ="UPDATE article SET comments=?1 WHERE id=?2", nativeQuery = true)
+    void updateCommentsById(Long comments, Long id);
+
+
 }

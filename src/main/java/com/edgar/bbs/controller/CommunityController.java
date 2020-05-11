@@ -7,6 +7,7 @@ import com.edgar.bbs.domain.JwcNotice;
 import com.edgar.bbs.domain.Reply;
 import com.edgar.bbs.service.CommunityService;
 import com.edgar.bbs.service.JwcService;
+import com.edgar.bbs.utils.RedisUtils;
 import com.edgar.bbs.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,45 +41,63 @@ public class CommunityController {
     @Value("${article.hot.num}")
     private Integer NUM;
 
+    @Resource
+    private RedisUtils redisUtils;
+
     @ApiOperation("获取所有的文章")
     @RequestMapping("/get_all")
-    public List<Article> getAllArticle(){
+    public List<Article> getAllArticle() {
         return articleDao.findAll();
     }
 
     @ApiOperation("根据id获取文章")
     @RequestMapping(value = "/get_article", method = RequestMethod.POST)
-    public Optional<Article> getArticleById(@RequestParam("id") Long id){
-        return articleDao.findById(id);
+    public Optional<Article> getArticleById(@RequestParam("id") Long id) {
+        Optional<Article> article = articleDao.findById(id);
+//        if(article.isPresent()){
+//            Long read = article.get().getRead();
+//            articleDao.updateReadById(read+1, id);
+//        }
+
+        if (article.isPresent()) {
+            Long num = replyDao.getReplyNumByArticleId(id);
+            Long read = article.get().getRead()+1;
+            article.get().setComments(num);
+            article.get().setRead(read);
+            articleDao.saveAndFlush(article.get());
+        }
+
+        return article;
     }
 
     @ApiOperation("查询文章对应的回答")
     @RequestMapping(value = "/get_reply", method = RequestMethod.POST)
-    public List<Reply> getReplyById(@RequestParam("id") Long id){
+    public List<Reply> getReplyById(@RequestParam("id") Long id) {
         return replyDao.findAllByArticleId(id);
     }
 
     @ApiOperation("写回答")
     @RequestMapping(value = "/reply", method = RequestMethod.POST)
-    public Result replyArticleById(@RequestParam("id") Long id,@RequestParam("reply") String reply, HttpSession session){
-       String username = (String) session.getAttribute("username");
-        if(username==null || username.trim().equals("")){
+    public Result replyArticleById(@RequestParam("id") Long id, @RequestParam("reply") String reply, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null || username.trim().equals("")) {
             return new Result(400, "您还没有登录，请登录");
-        }else{
+        } else {
+
             return communityService.writeReplyToArticle(id, reply, username);
         }
     }
 
     @ApiOperation("获取热门帖子")
     @RequestMapping(value = "/hot", method = RequestMethod.POST)
-    public List<Article> getHotArticle(@RequestParam("page") Integer page){
-        page = (page-1) * NUM;
-        return articleDao.findHotArticle( page);
+    public List<Article> getHotArticle(@RequestParam("page") Integer page) {
+        page = (page - 1) * NUM;
+        return articleDao.findHotArticle(page);
     }
 
     @ApiOperation("获取教务处的通知信息")
     @RequestMapping(value = "/jwc")
-    public List<JwcNotice> getJwcNotice(){
+    public List<JwcNotice> getJwcNotice() {
         return jwcService.getNewNotice();
     }
 }

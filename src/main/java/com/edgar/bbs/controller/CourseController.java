@@ -57,7 +57,7 @@ public class CourseController {
     @RequestMapping(value = "/write_course_comments", method = RequestMethod.POST)
     public Result writeCourseComments(@RequestParam("comment") String comment, @RequestParam("course_id") Long course_id, HttpSession session) {
         String username = (String) session.getAttribute("username");
-        if (username.trim().equals("")) {
+        if (username == null || username.trim().equals("")) {
             return new Result(400, "您还没有登录, 请登录");
         } else {
             Optional<CourseComments> courseComments = courseCommentsDao.findCourseCommentsByUsernameAndCourse_id(course_id, username);

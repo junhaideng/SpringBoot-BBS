@@ -1,6 +1,8 @@
 package com.edgar.bbs.service;
 
+import com.edgar.bbs.dao.ArticleDao;
 import com.edgar.bbs.dao.ReplyDao;
+import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.Reply;
 import com.edgar.bbs.utils.Result;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ public class CommunityService {
     @Resource
     private ReplyDao replyDao;
 
+    @Resource
+    private ArticleDao articleDao;
+
     /*
     给对应的帖子回复
      */
@@ -22,6 +27,9 @@ public class CommunityService {
             if(r.isPresent()){
                 return new Result(400, "您对该帖子已经进行回答了");
             }
+            Article article = articleDao.findById(article_id).get();
+            article.setComments(article.getComments()+1);
+            articleDao.saveAndFlush(article);
             replyDao.insertReply(article_id, reply, username);
             return new Result(200, "回复成功");
         }catch (Exception e){

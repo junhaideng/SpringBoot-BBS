@@ -42,8 +42,8 @@ public class Article {
     Long read;
 
     @Column(name = "star", columnDefinition = "bigint default 0")
-    Integer star;
+    Long star;
 
     @Column(name = "comments", columnDefinition = "bigint default 0")
-    Integer comments;
+    Long comments;
 }

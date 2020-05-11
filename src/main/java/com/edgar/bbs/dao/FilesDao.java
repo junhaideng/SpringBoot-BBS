@@ -27,4 +27,10 @@ public interface FilesDao extends JpaRepository<Files, Long> {
 
     @Query(value = "SELECT * FROM files WHERE id=:id AND username=:username", nativeQuery = true)
     Optional<Files> findByIdAndUsername(Long id, String username);
+
+    @Modifying
+    @Query(value = "UPDATE files SET download_times=?1 WHERE id=?2", nativeQuery = true)
+    void updateDownloadTimesById(Long downloadTimes, Long id);
+
+
 }
