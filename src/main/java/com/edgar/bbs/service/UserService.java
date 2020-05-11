@@ -75,6 +75,7 @@ public class UserService {
                 return new Result(400, "该用户名已存在");
             } else {
                 try {
+                    messageSettingsDao.insert(request.getParameter("username"));
                     userDao.insertUser(request.getParameter("username"), request.getParameter("password"), request.getParameter("email"), request.getParameter("gender"), request.getParameter("academy"), request.getParameter("grade"));
                     return new Result(200, "用户创建成功, 请登录");
                 } catch (Exception e) {

@@ -17,4 +17,8 @@ public interface MessageSettingsDao extends JpaRepository<MessageSettings, Long>
     @Modifying
     @Query(value = "UPDATE message_settings set `comment`=:comment, `like`=:like, star=:star WHERE username=:username", nativeQuery = true)
     void updateMessageSettingsByUsername(boolean comment, boolean like, boolean star, String username);
+
+    @Modifying
+    @Query(value = "INSERT INTO message_settings(username) VALUE ?1", nativeQuery = true)
+    void insert(String username);
 }
