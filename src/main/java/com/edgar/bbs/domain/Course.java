@@ -27,5 +27,6 @@ public class Course {
     @Column(name = "courseName", columnDefinition = "varchar(40)")
     String courseName;
 
-
+    @Column(name = "type", columnDefinition = "varchar(30)")
+    String type;
 }

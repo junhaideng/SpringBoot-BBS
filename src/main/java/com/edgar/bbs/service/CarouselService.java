@@ -27,7 +27,8 @@ public class CarouselService {
         if (!carousel.isPresent()) {
             return new Result(400, "没有对应的文件");
         } else {
-            String path = basePath + File.separator + carousel.get().getPath();
+            String path = basePath + File.separator+ PATH +File.separator + carousel.get().getPath();
+            System.out.println(path);
             File f = new File(path);
             if (f.exists()) {
                 byte[] b = new byte[1024];
@@ -69,7 +70,7 @@ public class CarouselService {
             HashMap<String, String> map = FileUtil.dealWithFileName(file_name);
             String name_to_store = map.get("name") + "." + map.get("suffix");
             file.transferTo(new File(path + name_to_store));
-            carouselDao.insertCarousel(true, PATH + File.separator + name_to_store, file_name);
+            carouselDao.insertCarousel(true,  name_to_store, file_name);
             return new Result(200, "上传成功");
         } catch (Exception e) {
             e.printStackTrace();

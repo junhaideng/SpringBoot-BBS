@@ -6,6 +6,7 @@ import com.edgar.bbs.dao.info.CourseSetInfo;
 import com.edgar.bbs.dao.info.SchoolInfo;
 import com.edgar.bbs.domain.Course;
 import com.edgar.bbs.domain.CourseComments;
+import com.edgar.bbs.service.CourseService;
 import com.edgar.bbs.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,9 @@ public class CourseController {
     @Resource
     private CourseCommentsDao courseCommentsDao;
 
+    @Resource
+    private CourseService courseService;
+
     @ApiOperation("获取学院")
     @RequestMapping("/get_all_school")
     public List<SchoolInfo> getAllSchool() {
@@ -49,9 +53,9 @@ public class CourseController {
     }
 
     @ApiOperation("根据学院查询课程")
-    @RequestMapping(value = "/get_course_by_school", method = RequestMethod.POST)
-    public List<Course> getCourseBySchool(@RequestParam("school") String school) {
-        return courseDao.getCourseBySchool(school);
+    @RequestMapping(value = "/get_course", method = RequestMethod.POST)
+    public List<Course> getCoursesBySchool(@RequestParam("school") String school, @RequestParam("type") String type) {
+        return courseService.getCourse(school, type);
     }
 
     @ApiOperation("根据id查询课程详细信息")

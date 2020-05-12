@@ -19,5 +19,11 @@ public interface CourseDao extends JpaRepository<Course, Long> {
     List<CourseSetInfo> getCourseByValue(String value);
 
     @Query(value = "SELECT * FROM course WHERE school=?1", nativeQuery = true)
-    List<Course> getCourseBySchool(String school);
+    List<Course> getCoursesBySchool(String school);
+
+    @Query(value = "SELECT * FROM course WHERE type=?1", nativeQuery = true)
+    List<Course> getCoursesByType(String type);
+
+    @Query(value = "SELECT * FROM course WHERE school=?1 AND type=?2", nativeQuery = true)
+    List<Course> getCoursesBySchoolAndType(String school, String type);
 }
