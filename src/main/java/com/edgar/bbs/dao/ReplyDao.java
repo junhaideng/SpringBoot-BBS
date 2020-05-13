@@ -31,4 +31,7 @@ public interface ReplyDao extends JpaRepository<Reply, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM reply WHERE reply.article_id=?1", nativeQuery = true)
     Long getReplyNumByArticleId(Long id);
+
+    @Query(value ="SELECT username FROM reply WHERE id=?1", nativeQuery = true)
+    Optional<String> getUsername(Long id);
 }

@@ -38,5 +38,7 @@ public interface ArticleDao extends JpaRepository<Article, Long> {
     @Query(value ="UPDATE article SET comments=?1 WHERE id=?2", nativeQuery = true)
     void updateCommentsById(Long comments, Long id);
 
+    @Query(value = "SELECT username FROM article WHERE id=?1", nativeQuery = true)
+    String getUsernameById(Long id);
 
 }

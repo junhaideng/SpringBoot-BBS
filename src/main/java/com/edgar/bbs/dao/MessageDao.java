@@ -37,4 +37,8 @@ public interface MessageDao extends JpaRepository<Message, Long> {
     @Modifying
     @Query(value = "UPDATE message set `read`=true WHERE username=?1", nativeQuery = true)
     void updateByUsername(String username);
+
+    @Modifying
+    @Query(value = "INSERT INTO message(content, title, username, type) VALUES(?1, ?2, ?3, ?4)", nativeQuery = true)
+    void insert(String content,String title, String username, String type);
 }
