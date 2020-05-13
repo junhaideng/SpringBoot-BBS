@@ -21,7 +21,7 @@ public class JwcService {
     @Resource
     private JwcNoticeDao jwcNoticeDao;
 
-    private String base_url = "http://jwc.sjtu.edu.cn/rss/rss_notice.aspx?SubjectID=198015&TemplateID=221027";
+    private String base_url = "http://www.jwc.sjtu.edu.cn/web/sjtu/198015.htm";
 
     public void updateNewNotice() {
         try {
@@ -32,34 +32,41 @@ public class JwcService {
             String line = null;
             int num = 0;
 
-            Pattern pattern = Pattern.compile("<item><title>(.*?)</title><link>(.*?)</link><pubDate>(.*?)</pubDate></item>");
+            Pattern pattern = Pattern.compile("&nbsp;&nbsp;<a.*?href=\"(.*?)\".*?>(.*?)</a></td>", Pattern.MULTILINE);
+            Pattern pattern1 = Pattern.compile("\\[(.*?)]", Pattern.MULTILINE|Pattern.DOTALL);
             List<String> titleArray = new ArrayList<>();
             List<String> linkArray = new ArrayList<>();
             List<String> pubDateArray = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
-                if (matcher.find()) {
-                    String title = matcher.group(1);
-                    String link = matcher.group(2);
-                    String pubDate = matcher.group(3);
-                    titleArray.add(title);
-                    linkArray.add(link);
+                Matcher matcher1 = pattern1.matcher(line);
+                if (matcher1.find()) {
+                    String pubDate = matcher1.group(1).trim();
                     pubDateArray.add(pubDate);
                 }
+                if (matcher.find()) {
+                    String title = matcher.group(2);
+                    String link = matcher.group(1);
+                    titleArray.add(title);
+                    linkArray.add("http://www.jwc.sjtu.edu.cn/web/sjtu/"+ link);
+                }
             }
-            int length = titleArray.size();
             for(num=1; num<=10; num++){
-                jwcNoticeDao.insert(titleArray.get(length-num), linkArray.get(length-num), pubDateArray.get(length-num));
+                jwcNoticeDao.insert(titleArray.get(num), linkArray.get(num), pubDateArray.get(num));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
     public List<JwcNotice> getNewNotice() {
         jwcNoticeDao.clear();
         updateNewNotice();
         return jwcNoticeDao.findAll();
+    }
+    public static void main(String[] args) {
+        new JwcService().updateNewNotice();
     }
 }
