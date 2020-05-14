@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
@@ -72,19 +73,19 @@ public class CommunityController {
 
     @ApiOperation("查询文章对应的回答")
     @RequestMapping(value = "/get_reply", method = RequestMethod.POST)
-    public List<Reply> getReplyById(@RequestParam("id") Long id) {
-        return replyDao.findAllByArticleId(id);
+    public List<?> getReplyById(@RequestParam("id") Long id) {
+        return communityService.getReplyInfo(id);
     }
 
     @ApiOperation("写回答")
     @RequestMapping(value = "/reply", method = RequestMethod.POST)
-    public Result replyArticleById(@RequestParam("id") Long id, @RequestParam("reply") String reply, HttpSession session) {
+    public Result replyArticleById(@RequestParam("id") Long id, @RequestParam("reply") String reply, @RequestParam("url") String url, HttpSession session) {
         String username = (String) session.getAttribute("username");
         if (username == null || username.trim().equals("")) {
             return new Result(400, "您还没有登录，请登录");
         } else {
 
-            return communityService.writeReplyToArticle(id, reply, username);
+            return communityService.writeReplyToArticle(id, reply, username, url);
         }
     }
 

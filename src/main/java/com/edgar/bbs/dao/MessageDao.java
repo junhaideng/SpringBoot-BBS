@@ -13,7 +13,7 @@ import java.util.Optional;
 @Transactional
 public interface MessageDao extends JpaRepository<Message, Long> {
 
-    @Query(value = "SELECT id, `type`, title,content, `time`, `read` FROM message WHERE username=:username ORDER BY time DESC ", nativeQuery = true)
+    @Query(value = "SELECT id, `type`, title,content, `time`, `read`, url FROM message WHERE username=:username ORDER BY time DESC ", nativeQuery = true)
     List<MessageInfo> getAllByUsername(String username);
 
     @Query(value = "SELECT COUNT(*) FROM message WHERE username=?1 AND `read`=0", nativeQuery = true)
@@ -39,6 +39,6 @@ public interface MessageDao extends JpaRepository<Message, Long> {
     void updateByUsername(String username);
 
     @Modifying
-    @Query(value = "INSERT INTO message(content, title, username, type) VALUES(?1, ?2, ?3, ?4)", nativeQuery = true)
-    void insert(String content,String title, String username, String type);
+    @Query(value = "INSERT INTO message(content, title, username, type, url) VALUES(?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
+    void insert(String content,String title, String username, String type, String url);
 }

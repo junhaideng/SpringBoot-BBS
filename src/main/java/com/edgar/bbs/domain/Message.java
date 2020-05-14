@@ -54,4 +54,10 @@ public class Message {
     @Column(name = "`read`", columnDefinition = "boolean default false")
     Boolean read;
 
+    /*
+    信息对应的网址
+     */
+    @Column(name = "url", columnDefinition = "varchar(200)")
+    String url;
+
 }

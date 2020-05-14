@@ -34,4 +34,7 @@ public interface ReplyDao extends JpaRepository<Reply, Long> {
 
     @Query(value ="SELECT username FROM reply WHERE id=?1", nativeQuery = true)
     Optional<String> getUsername(Long id);
+
+    @Query(value = "SELECT id FROM reply WHERE article_id=?1", nativeQuery = true)
+    Long[] getRepliesIdByArticleId(Long id);
 }

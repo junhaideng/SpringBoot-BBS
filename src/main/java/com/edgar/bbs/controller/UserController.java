@@ -217,6 +217,13 @@ public class UserController {
         }
     }
 
+    @ApiOperation("通过用户名获取头像")
+    @RequestMapping("/avatar/get_by_username")
+    public Result getAvatarByUsername(@RequestParam("username") String username, HttpServletResponse response) throws IOException {
+        Optional<Avatar> avatar = avatarDao.getAvatarByUsername(username);
+        return avatarService.getAvatar(response,avatar);
+    }
+
     @ApiOperation("上传头像")
     @RequestMapping(value = "/avatar/upload", method = RequestMethod.POST)
     public Result uploadAvatar(@RequestParam("file") MultipartFile file, HttpSession session){

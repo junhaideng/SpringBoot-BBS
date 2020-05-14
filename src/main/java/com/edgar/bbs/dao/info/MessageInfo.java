@@ -1,6 +1,5 @@
 package com.edgar.bbs.dao.info;
 
-import java.util.Date;
 
 public interface MessageInfo {
     Long getId();
@@ -14,4 +13,6 @@ public interface MessageInfo {
      String getTime();
 
      Boolean getRead();
+
+     String getUrl();
 }
