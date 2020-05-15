@@ -42,7 +42,7 @@ public class CommunityService {
             articleDao.saveAndFlush(article);
             replyDao.insertReply(article_id, reply, username);
             String author = articleDao.getUsernameById(article_id);
-            messageDao.insert(article.getTitle(), String.format("%s评论了你的文章", username), author, "评论", url);
+            messageDao.insert(reply, String.format("%s评论了你的文章 %s", username, article.getTitle()), author, "评论", url);
             return new Result(200, "回复成功");
         } catch (Exception e) {
             e.printStackTrace();
