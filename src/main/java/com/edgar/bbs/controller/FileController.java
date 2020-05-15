@@ -49,6 +49,10 @@ public class FileController {
     @ApiOperation(value = "上传文件")
     @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
     public Result uploadFile(MultipartHttpServletRequest request, HttpSession session) throws IOException {
-        return fileService.uploadFile(Objects.requireNonNull(request.getFile("file")), request.getParameter("type"), request.getParameter("description"), (String) session.getAttribute("username"));
+        String username = session.getAttribute("username").toString();
+        if(username ==null){
+            return new Result(400, "请先进行登录");
+        }
+        return fileService.uploadFile(Objects.requireNonNull(request.getFile("file")), request.getParameter("type"), request.getParameter("description"), username);
     }
 }

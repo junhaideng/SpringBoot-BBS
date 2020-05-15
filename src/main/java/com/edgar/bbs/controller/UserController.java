@@ -64,13 +64,21 @@ public class UserController {
     @ApiOperation(value = "获取用户登录日志")
     @RequestMapping(value = "/loginlog", method = RequestMethod.POST)
     public List<LoginLogInfo> getUserLoginLog(HttpSession session) {
-        return loginLogDao.findAllByUsername((String) session.getAttribute("username"));
+        String username = session.getAttribute("username").toString();
+        if(username ==null){
+            return null;
+        }
+        return loginLogDao.findAllByUsername(username);
     }
 
     @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.POST)
     public UserInfo getUserInfo(HttpSession session) {
-        UserInfo user = userDao.getInfoUsingUsername((String) session.getAttribute("username"));
+        String username = session.getAttribute("username").toString();
+        if(username ==null){
+            return null;
+        }
+        UserInfo user = userDao.getInfoUsingUsername(username);
         return user;
     }
 
@@ -83,19 +91,31 @@ public class UserController {
     @ApiOperation(value = "获取用户的帖子")
     @RequestMapping(value = "/article", method = RequestMethod.POST)
     public List<Article> getUserArticles(HttpSession session) {
-        return articleDao.findArticlesByUsername((String) session.getAttribute("username"));
+        String username = session.getAttribute("username").toString();
+        if(username ==null) {
+            return null;
+        }
+        return articleDao.findArticlesByUsername(username);
     }
 
     @ApiOperation(value = "获取用户的文件信息")
     @RequestMapping(value = "/files", method = RequestMethod.POST)
     public List<Files> getUserFiles(HttpSession session) {
-        return filesDao.findAllByUsername((String) session.getAttribute("username"));
+        String username = session.getAttribute("username").toString();
+        if(username ==null){
+            return null;
+        }
+        return filesDao.findAllByUsername(username);
     }
 
     @ApiOperation(value = "删除文件")
     @RequestMapping(value = "/delfiles", method = RequestMethod.POST)
     public Result delFiles(@RequestBody Long[] filesId, HttpSession session) {
-        return userService.deleteFilesByIdAndUsername(filesId, (String) session.getAttribute("username"));
+        String username = session.getAttribute("username").toString();
+        if(username ==null){
+            return new Result(400, "请先进行登录");
+        }
+        return userService.deleteFilesByIdAndUsername(filesId, username);
 
     }
 
