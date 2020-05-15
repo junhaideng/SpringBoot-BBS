@@ -24,7 +24,7 @@ public class Files {
     @Column(name = "fileName", columnDefinition = "varchar(100)", nullable = false)
     String fileName;
 
-    @Column(name = "type", columnDefinition = "varchar(10)", nullable = false)
+    @Column(name = "type", columnDefinition = "varchar(30)", nullable = false)
     String type;
 
     @Column(name = "downloadTimes", columnDefinition = "bigint default 0")

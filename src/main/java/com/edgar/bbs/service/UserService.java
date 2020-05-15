@@ -9,6 +9,7 @@ import com.edgar.bbs.domain.User;
 import com.edgar.bbs.utils.IpUtil;
 import com.edgar.bbs.utils.LocationUtil;
 import com.edgar.bbs.utils.Result;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,6 +44,9 @@ public class UserService {
 
     @Resource
     private LoginLogDao loginLogDao;
+
+    @Value("${upload.files}")
+    private String PATH;
 
 
     public Result login(String username, String password, HttpServletRequest request) throws IOException {
@@ -161,7 +165,8 @@ public class UserService {
                 Optional<Files> file = filesDao.findByIdAndUsername(id, username);
                 if (file.isPresent()) {
                     String BasePath = System.getProperty("user.dir");
-                    new File(BasePath + File.separator + file.get().getPath()).delete();
+                    System.out.println(BasePath  + PATH + File.separator + file.get().getPath());
+                    new File(BasePath  + PATH + File.separator + file.get().getPath()).delete();
                     filesDao.deleteById(id);
                 } else {
                     return new Result(400, "文件不存在");
