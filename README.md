@@ -39,5 +39,5 @@
 更多api运行项目之后进入`swagger-ui.html`中查看 
 
 ### Demo
-<img src="https://github.com/Cyberist-Edgar/bbs/raw/master/demo.gif" alt="demo"/>
+<img src="demo.gif" alt="demo"/>
 
