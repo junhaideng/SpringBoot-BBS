@@ -32,3 +32,6 @@ build/
 
 ### log ###
 bbs.log*
+
+###媒体文件 ###
+media/
