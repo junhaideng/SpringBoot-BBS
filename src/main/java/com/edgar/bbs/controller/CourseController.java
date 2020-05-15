@@ -35,19 +35,19 @@ public class CourseController {
     private CourseService courseService;
 
     @ApiOperation("获取学院")
-    @RequestMapping("/get_all_school")
+    @RequestMapping(value = "/get_all_school", method = RequestMethod.GET)
     public List<SchoolInfo> getAllSchool() {
         return courseDao.getSchool();
     }
 
     @ApiOperation("获取所有的课程")
-    @RequestMapping("/get_all_course")
+    @RequestMapping(value = "/get_all_course", method = RequestMethod.GET)
     public List<CourseSetInfo> getAllCourse(){
         return courseDao.getCourse();
     }
 
     @ApiOperation("自动获取课程")
-    @RequestMapping("/get_by_value")
+    @RequestMapping(value = "/get_by_value", method = RequestMethod.POST)
     public List<CourseSetInfo> getByValue(@RequestParam("value") String value){
         return courseDao.getCourseByValue(value);
     }

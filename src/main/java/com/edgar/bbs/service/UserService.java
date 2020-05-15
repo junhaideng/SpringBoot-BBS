@@ -1,10 +1,13 @@
 package com.edgar.bbs.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.edgar.bbs.dao.*;
 import com.edgar.bbs.dao.info.MessageSettingsInfo;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.domain.Message;
 import com.edgar.bbs.domain.User;
+import com.edgar.bbs.utils.IpUtil;
+import com.edgar.bbs.utils.LocationUtil;
 import com.edgar.bbs.utils.Result;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -37,8 +41,11 @@ public class UserService {
     @Resource
     private AvatarDao avatarDao;
 
+    @Resource
+    private LoginLogDao loginLogDao;
 
-    public Result login(String username, String password, HttpServletRequest request) {
+
+    public Result login(String username, String password, HttpServletRequest request) throws IOException {
         Optional<User> user = userDao.findUserByUsername(username);
         if (user.isPresent()) {
             String realPassword = user.get().getPassword();
@@ -47,6 +54,15 @@ public class UserService {
                 HttpSession session = request.getSession();
                 session.setAttribute("isLogin", true);
                 session.setAttribute("username", username);
+                String ip = IpUtil.getIpAddr(request);
+                JSONObject jsonObject = LocationUtil.getLocation(ip);
+                String address = "";
+                if(jsonObject.getIntValue("status")==0){
+                     address = "unknown";
+                }else{
+                    address = jsonObject.getJSONObject("content").getString("address");
+                }
+                loginLogDao.insert(address, ip, username);
                 return new Result(200, "登录成功");
 
             } else {

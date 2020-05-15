@@ -26,8 +26,10 @@ public class SearchService {
         HashMap<String, List<?>> map = new HashMap<>();
         map.put("articles", articles);
         map.put("files", files);
-
-        System.out.println(files);
         return map;
     }
+
+//    public Map searchData(String q){
+//
+//    }
 }

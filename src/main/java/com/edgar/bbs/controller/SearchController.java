@@ -1,5 +1,9 @@
 package com.edgar.bbs.controller;
 
+import com.edgar.bbs.dao.ArticleDao;
+import com.edgar.bbs.dao.FilesDao;
+import com.edgar.bbs.dao.info.SearchFilesInfo;
+import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.service.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,9 +23,28 @@ public class SearchController {
     @Resource
     private SearchService searchService;
 
+    @Resource
+    private FilesDao filesDao;
+
+    @Resource
+    private ArticleDao articleDao;
+
     @ApiOperation(value = "搜索信息包括文件和文章")
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public Map getSearchData(@RequestParam(value = "q") String q){
+    public List<?> getSearchData(@RequestParam(value = "q") String q, @RequestParam(value="type") String type){
+        if(type.equals("file")){
+            return filesDao.findFileNameContains(q);
+        }
+        else if(type.equals("article")){
+            return articleDao.findArticlesTitleContains(q);
+        }else{
+            return null;
+        }
+    }
+
+    @ApiOperation(value = "搜索")
+    @RequestMapping(value = "/get", method =  RequestMethod.POST)
+    public Map getData(@RequestParam("q") String q){
         return searchService.search(q);
     }
 }

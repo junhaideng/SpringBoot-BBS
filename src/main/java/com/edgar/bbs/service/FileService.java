@@ -58,7 +58,7 @@ public class FileService {
                     fis.close();
                 }
             }
-            return new Result(200, "文件传输失败");
+            return new Result(400, "文件传输失败");
         }
     }
 

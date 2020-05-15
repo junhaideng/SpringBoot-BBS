@@ -22,7 +22,7 @@ public interface FilesDao extends JpaRepository<Files, Long> {
     @Query(value = "SELECT * FROM files WHERE file_name=:file_name AND username=:username", nativeQuery = true)
     List<Files> findFilesByFileNameAndUsername(String file_name, String username);
 
-    @Query(value = "SELECT DISTINCT file_name FROM files WHERE file_name LIKE %:q%", nativeQuery = true)
+    @Query(value = "SELECT id, file_name,type, description, path FROM files WHERE file_name LIKE %:q%", nativeQuery = true)
     List<SearchFilesInfo> findFileNameContains(String q);
 
     @Query(value = "SELECT * FROM files WHERE id=:id AND username=:username", nativeQuery = true)
@@ -32,5 +32,6 @@ public interface FilesDao extends JpaRepository<Files, Long> {
     @Query(value = "UPDATE files SET download_times=?1 WHERE id=?2", nativeQuery = true)
     void updateDownloadTimesById(Long downloadTimes, Long id);
 
-
+    @Query(value = "SELECT id, file_name,type, description, path, username, download_times FROM files", nativeQuery = true)
+    List<SearchFilesInfo> getAll();
 }
