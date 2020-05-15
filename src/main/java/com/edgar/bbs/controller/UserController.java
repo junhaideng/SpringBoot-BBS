@@ -98,6 +98,12 @@ public class UserController {
         return articleDao.findArticlesByUsername(username);
     }
 
+    @ApiOperation("删除帖子")
+    @RequestMapping(value = "/article/delete", method = RequestMethod.POST)
+    public Result delelteArticle(@RequestParam("id") Long id, HttpSession session){
+        return userService.deleteArticleById(id, session);
+    }
+
     @ApiOperation(value = "获取用户的文件信息")
     @RequestMapping(value = "/files", method = RequestMethod.POST)
     public List<Files> getUserFiles(HttpSession session) {

@@ -3,6 +3,7 @@ package com.edgar.bbs.service;
 import com.alibaba.fastjson.JSONObject;
 import com.edgar.bbs.dao.*;
 import com.edgar.bbs.dao.info.MessageSettingsInfo;
+import com.edgar.bbs.domain.Article;
 import com.edgar.bbs.domain.Files;
 import com.edgar.bbs.domain.Message;
 import com.edgar.bbs.domain.User;
@@ -282,6 +283,29 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(400, "标记失败");
+        }
+    }
+
+    /*
+    删帖子
+     */
+
+    public Result deleteArticleById(Long id, HttpSession session){
+        String username = session.getAttribute("username").toString();
+        if(username==null){
+            return new Result(400, "用户不存在");
+        }
+        Optional<Article> article = articleDao.findById(id);
+        if(!article.isPresent()){
+            return new Result(400, "该帖子不存在");
+        }
+        else{
+            if(article.get().getUsername().equals(username)){
+                articleDao.delete(article.get());
+                return  new Result(200, "删除成功");
+            }else{
+                return new Result(400, "没有权限");
+            }
         }
     }
 
