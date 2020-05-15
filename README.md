@@ -1,9 +1,11 @@
 ### SpringBoot 实现BBS
 > 此为后端相关处理, 前端使用Vue[项目见这](https://github.com/Cyberist-Edgar/bbs)
 
-项目开发尚未完成
+项目已基本实现
+
 
 <hr/>
+
 已实现api：
 
 - 用户注册
@@ -34,6 +36,8 @@
 
 - 通知设置
 
+更多api运行项目之后进入`swagger-ui.html`中查看 
 
 ### Demo
 <img src="https://github.com/Cyberist-Edgar/bbs/raw/master/demo.gif" alt="demo"/>
+
