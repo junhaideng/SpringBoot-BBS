@@ -27,9 +27,12 @@ public class Reply {
     @Column(name = "reply", columnDefinition = "text")
     String reply;
 
-    @Column(name = "star", columnDefinition = "bigint default 0")
-    Integer star;
+    @Column(name = "`like`", columnDefinition = "bigint default 0")
+    Long like;
+
+    @Column(name = "dislike", columnDefinition = "bigint default 0")
+    Long dislike;
 
     @Column(name = "comments", columnDefinition = "bigint default 0")
-    Integer comments;
+    Long comments;
 }

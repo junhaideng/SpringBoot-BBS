@@ -32,42 +32,27 @@ public class ReplyController {
 
 
     @ApiOperation("点赞回答")
-    @RequestMapping(value = "/star_reply", method = RequestMethod.POST)
-    public Result starReply(HttpSession session, @RequestParam("id") Long id, HttpServletRequest request){
-        String username = session.getAttribute("username").toString();
+    @RequestMapping(value = "/star", method = RequestMethod.POST)
+    public Result starReply(HttpSession session, @RequestParam("id") Long id, @RequestParam("type") String type, HttpServletRequest request){
+        String username = (String) session.getAttribute("username");
         if(username==null){
-            return new Result(400, "登录之后才能点赞哦");
+            return new Result(400, "登录之后才能操作哦");
         }
-
         Optional<Reply> reply = replyDao.findById(id);
         if(!reply.isPresent()){
             return new Result(400, "该回复不存在");
         }
         // 点赞数加一
-        reply.get().setStar(reply.get().getStar()+1);
+        if(type.equals("like")){
+            reply.get().setLike(reply.get().getLike()+1);
+            messageDao.insert(reply.get().getReply(),  String.format("%s点赞了你的回复", username), reply.get().getUsername(), "点赞", request.getRequestURL().toString());
+        }else if(type.equals("dislike")){
+            reply.get().setLike(reply.get().getLike()-1);
+        }else {
+            return new Result(400, "参数不正确！");
+        }
         replyDao.saveAndFlush(reply.get());
-
-        // 用户 信息通知加一
-        messageDao.insert(reply.get().getReply(),  String.format("%s点赞了你的回复", username), reply.get().getUsername(), "点赞", request.getRequestURL().toString());
         return new Result(200, "点赞成功");
-    }
-
-    @ApiOperation("取消回答")
-    @RequestMapping(value = "/unstar_reply", method = RequestMethod.POST)
-    public Result unStarReply(HttpSession session, @RequestParam("id") Long id){
-        String username = session.getAttribute("username").toString();
-        if(username==null){
-            return new Result(400, "登录之后才能取消点赞!");
-        }
-
-        Optional<Reply> reply = replyDao.findById(id);
-        if(!reply.isPresent()){
-            return new Result(400, "该回复不存在");
-        }
-        // 点赞数加一
-        reply.get().setStar(reply.get().getStar()-1);
-        replyDao.saveAndFlush(reply.get());
-        return new Result(200, "操作成功");
     }
 
     @ApiOperation("回答下的回复")

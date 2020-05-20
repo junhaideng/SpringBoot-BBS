@@ -68,7 +68,7 @@ public class UserController {
     @ApiOperation(value = "获取用户登录日志")
     @RequestMapping(value = "/loginlog", method = RequestMethod.POST)
     public List<LoginLogInfo> getUserLoginLog(HttpSession session) {
-        String username = session.getAttribute("username").toString();
+        String username =(String) session.getAttribute("username");
         if (username == null) {
             return null;
         }
@@ -78,7 +78,7 @@ public class UserController {
     @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.POST)
     public UserInfo getUserInfo(HttpSession session) {
-        String username = session.getAttribute("username").toString();
+        String username =(String) session.getAttribute("username");
         if (username == null) {
             return null;
         }
@@ -95,7 +95,7 @@ public class UserController {
     @ApiOperation(value = "获取用户的帖子")
     @RequestMapping(value = "/article", method = RequestMethod.POST)
     public List<Article> getUserArticles(HttpSession session) {
-        String username = session.getAttribute("username").toString();
+        String username =(String) session.getAttribute("username");
         if (username == null) {
             return null;
         }
@@ -111,7 +111,7 @@ public class UserController {
     @ApiOperation(value = "获取用户的文件信息")
     @RequestMapping(value = "/files", method = RequestMethod.POST)
     public List<Files> getUserFiles(HttpSession session) {
-        String username = session.getAttribute("username").toString();
+        String username =(String) session.getAttribute("username");
         if (username == null) {
             return null;
         }
@@ -121,7 +121,7 @@ public class UserController {
     @ApiOperation(value = "删除文件")
     @RequestMapping(value = "/delfiles", method = RequestMethod.POST)
     public Result delFiles(@RequestBody Long[] filesId, HttpSession session) {
-        String username = session.getAttribute("username").toString();
+        String username =(String) session.getAttribute("username");
         if (username == null) {
             return new Result(400, "请先进行登录");
         }
@@ -182,7 +182,7 @@ public class UserController {
     @ApiOperation("获取信息通知")
     @RequestMapping(value = "/message", method = RequestMethod.POST)
     public List<MessageInfo> getMessage(HttpSession session) {
-        String username = session.getAttribute("username").toString();
+        String username =(String) session.getAttribute("username");
         if (username == null) {
             return null;
         }
@@ -196,7 +196,7 @@ public class UserController {
     @ApiOperation("获取未读信息总数")
     @RequestMapping(value = "/message/unread", method = RequestMethod.POST)
     public Map getUnreadMessage(HttpSession session) {
-        String username = session.getAttribute("username").toString();
+        String username =(String) session.getAttribute("username");
         if (username == null) {
             return null;
         }
