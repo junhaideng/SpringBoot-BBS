@@ -1,7 +1,8 @@
 ### SpringBoot 实现BBS
 > 此为后端相关处理, 前端使用Vue[项目见这](https://github.com/Cyberist-Edgar/bbs)
 
-项目已基本实现
+
+项目已基本实现, 表定义文件见 [ddl.sql](src/main/java/com/edgar/bbs/domain/ddl.sql)
 
 
 <hr/>
